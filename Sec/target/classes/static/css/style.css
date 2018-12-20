@@ -1,0 +1,285 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: arial;
+}
+
+.border {
+	border: solid 2px #9999ff;
+	border-radius: 10px;
+	padding: 15px;
+	color: #1A189F;
+}
+
+/*page-top*/
+#page-top {
+	width: 75%;
+	padding: 15px;
+	margin: auto auto 25px auto;
+	background-color: #9999ff;
+	border-radius: 0 0 10px 10px;
+	display: flex;
+  	flex-wrap: nowrap;
+}
+#page-top-left {
+	color: #fff;
+	font-size: 25px;
+	font-weight: bold;
+	float: left;
+}
+
+#page-top-right {
+	text-align: right;
+	color: #fff;
+	font-size: 12px;
+	width: 100%;
+}
+
+#loginname {
+	font-weight: bold;
+}
+
+#logout {
+	color: #2420A8;
+	text-decoration: none;
+}
+
+#logout:active{
+	color: #000000;
+	text-decoration: none;
+}
+
+#logout:hover{
+	color: #D1D4FF;
+	text-decoration: none;
+}
+
+#separator {
+	clear: left;
+}
+
+/*Container*/
+.container{
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/*message*/
+#message{
+	width: 30%;
+	float:left;
+	margin: 30px auto auto 25%;
+	color: #9999FF;
+	word-wrap: break-word;	
+}
+
+/*LoginContent*/
+#liContent{
+	width: 170px;
+	/*height: 200px;*/
+	border: solid 2px #9999ff;
+	border-radius: 10px;
+	padding: 15px;
+	margin: 30px 25% 30px auto;
+	/*color: #6868FF;*/
+}
+
+.lcPanel {
+	padding: 5px;
+	font-size: 12px;
+}
+
+.lcTextbox {
+	border: solid 1px #9999ff;
+	border-radius: 20px;
+	outline: none;
+}
+
+.lcTextbox:focus {
+	outline: none;
+}
+
+.lcButton {
+	border: solid 1px #9999ff;
+	border-radius: 20px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #A2A2FF;
+	text-decoration: none;
+	
+}
+
+.lcButton:hover{
+	background-color: #C7C7FF;
+}
+
+.lcButton:active{
+	background-color: #9595FF;
+}
+
+.lcButton:focus{
+	outline: none;
+}
+
+.lcLink:hover, .lcLink:link:hover{
+	color: #ADADAD;
+	text-decoration: none;
+}
+
+.lcLink:active, .lcLink:link:active{
+	color: #000000;
+	text-decoration: none;
+}
+
+.lcLink:link{
+	color: #9999ff;
+	text-decoration: none;
+}
+
+.lcLink:visited{
+	text-decoration: none;
+}
+
+/*page-left*/
+#page-left {
+	float:left;
+	width: 15%;
+	height: 530px;
+	margin: auto auto auto 6.25%;
+}
+
+#incidents {
+	height: 455px;
+	margin: 15px auto 15px 50px;
+	overflow: auto;
+}
+
+.plLink {
+	text-decoration: none;
+}
+
+.scroll::-webkit-scrollbar {
+    width: 12px;
+	max-height: 50px;
+}
+
+.scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(153, 153, 255, 0.5); 
+    border-radius: 10px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(153, 153, 255, 0.5);
+}
+
+.scroll::-webkit-scrollbar-thumb:hover {
+    -webkit-box-shadow: inset 0 0 6px rgba(172, 172, 255, 1);
+}
+
+#page-right{
+	width: 60%;
+	height: 530px;
+	margin: auto 11% auto auto;
+}
+
+#page-right-content{
+	height: 530px;
+	overflow: auto;
+}
+
+#noselected-div {
+	text-align: center;
+	margin: 200px auto auto auto;
+	color: #9999FF;
+}
+
+#ticket-div{
+	width: 60%;
+	height: 530px;
+	margin: auto;
+}
+
+#ticket-content{
+	height: 530px;
+	overflow: auto;
+}
+
+#incident-desc {
+	width: 95%;
+}
+
+#pr-tc-left {
+	width: 60%;
+}
+
+#pr-tc-right {
+	width: 20%;
+	padding: 0px 0px 0px 5px;
+}
+
+#attach {
+	border: solid 1px #9999ff;
+	height: 100px;
+	margin: auto auto 5px auto;
+	padding: 5px;
+	overflow: auto;
+}
+
+.attach-link {
+	font-size: 10px;
+	margin: auto auto auto 10%;
+}
+
+.prLabel {
+	display: block;
+	margin: auto auto 8px 0px;
+}
+
+.tcLabel {
+	margin: auto auto 0px 0px;
+}
+
+.prTextarea {
+	display: block;
+	margin: auto auto 5px 0px;
+	resize: none;
+	width: 80%;
+	height: 100px;
+	border: solid 1px #9999ff;
+	border-radius: 10px;
+	padding: 5px;
+	font-size: 12px;
+	color: #515151
+}
+
+.prTextarea:focus {
+	outline: none;
+}
+
+.prPanel {
+	margin: auto auto 10px 0px;
+}
+
+.prLabel-span {
+	font-weight: bold;
+}
+
+/*page-both*/
+#page-both {
+	clear: left;
+	width: 75%;
+	padding: 15px;
+	margin: 25px auto 25px auto;
+	background-color: #9999ff;
+	/*position: relative;*/
+	/*left: 39%;*/
+	/*bottom: 0px;*/
+	/*transform: translate(-50%, 0%);*/
+	border-radius: 10px 10px 10px 10px;
+}
+
+#created {
+	color: #fff;
+	font-size: 15px;
+}

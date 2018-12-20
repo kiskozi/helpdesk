@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Helpdesk</title>
+		<link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+	</head>
+	
+	<body>
+	
+	
+		<div id="page-top">
+			<div id="page-top-left">HelpDesk</div>
+			<div id="page-top-right">
+				<form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+					Bejelentkezve, mint: <span id="loginname" sec:authentication="name"></span><br/>
+<!-- 					Bejelentkezve, mint: <span th:text="${user.fullName}"></span> -->
+					<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
+				</form>
+			</div>
+			
+		</div>
+		
+		<div id="separator"></div>
+		
+		<div layout:fragment="loginContent">
+		</div>
+
+		<div id="page-both">
+			<p id="created">Created by: Kozma Krisztián</p>			
+		</div>
+	
+	
+		<script>
+		
+// 			var newUser =  th:text="#{newUser}";
+// 			if (!newUser) {
+// 				var para = document.createElement("p");
+// 				var node = document.createTextNode("Activálja a regisztrációt.");
+// 				para.appendChild(node);
+// 				var element = document.getElementById("message");
+// 				element.appendChild(para);
+// 			}
+			
+			
+			
+		
+//  			var url_string = window.location.href;
+//  			var url = new URL(url_string);
+			
+//  			if (url.searchParams.get("activationsuccess")) {
+// 				var para = document.createElement("p");
+// 				var node = document.createTextNode(window.location.href);
+// 				para.appendChild(node);
+// 				var element = document.getElementById("message");
+// 				element.appendChild(para);
+//  			}
+			
+		</script>
+			
+	</body>
+
+	
+</html>

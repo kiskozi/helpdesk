@@ -1,0 +1,123 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: arial;
+}
+
+/*page-top*/
+#page-top {
+	width: 75%;
+	padding: 15px;
+	margin: auto;
+	background-color: #9999ff;
+	border-radius: 0 0 10px 10px;
+	display: flex;
+  	flex-wrap: nowrap;
+}
+#page-top-left {
+	color: #fff;
+	font-size: 25px;
+	font-weight: bold;
+	float:left;
+}
+
+#page-top-right {
+	color: #fff;
+	font-size: 15px;
+	margin: auto auto auto 60%;
+}
+
+#separator {
+	clear: left;
+}
+
+/*Container*/
+.container{
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/*message*/
+#message{
+	width: 30%;
+	float:left;
+	margin: 30px auto auto 25%;
+	color: #9999FF;
+	word-wrap: break-word;
+	/*border: solid 2px #9999ff;*/
+	
+}
+
+/*LoginContent*/
+#liContent{
+	width: 170px;
+	/*height: 200px;*/
+	border: solid 2px #9999ff;
+	border-radius: 10px 10px 10px 10px;
+	padding: 15px;
+	margin: 30px 25% 30px auto;
+	/*color: #6868FF;*/
+}
+
+.lcPanel {
+	padding: 5px;
+	font-size: 12px;
+}
+
+.lcTextbox {
+	border: solid 1px #9999ff;
+	border-radius: 20px 20px 20px 20px;
+	outline: none;
+}
+
+.lcTextbox:focus {
+	outline: none;
+}
+
+.lcButton {
+	border: solid 1px #9999ff;
+	border-radius: 20px 20px 20px 20px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #A2A2FF;
+}
+
+.lcButton:hover{
+	background-color: #C7C7FF;
+}
+
+.lcButton:active{
+	background-color: #9595FF;
+}
+
+.lcButton:focus{
+	outline: none;
+}
+
+.lcLink:hover{
+	color: #ADADAD;
+	text-decoration: none;
+}
+
+.lcLink:active{
+	color: #000000;
+	text-decoration: none;
+}
+
+/*page-both*/
+#page-both {
+	width: 75%;
+	padding: 15px;
+	margin: auto;
+	background-color: #9999ff;
+	/*position: relative;*/
+	/*left: 39%;*/
+	/*bottom: 0px;*/
+	/*transform: translate(-50%, 0%);*/
+	border-radius: 10px 10px 0 0;
+}
+
+#created {
+	color: #fff;
+	font-size: 15px;
+}

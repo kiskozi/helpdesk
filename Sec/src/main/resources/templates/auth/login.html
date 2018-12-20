@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/main}">
+<head>
+		<title>Helpdesk</title>
+		
+		
+		
+</head>
+
+<body>
+		
+		<div layout:fragment="loginContent">
+		
+			<form name="login" th:action="@{/login}" method="post" class="form-signin">
+			
+				<div class="container">
+				
+				
+					<div id="message">
+					  <h1>Kérem jelentkezzen be, vagy regisztráljon. </h1><br/>
+					  <p th:if="${param.error}" >Hibás Felhasználói név és jelszó!</p>
+					  <p th:if="${param.logout}" >Sikeres kijelentkezés!</p>
+					  <p th:if="${param.activationsuccess}" >A fiókját sikeresen activálta!</p>
+					  <p th:if="${param.novalidcode}" >A fiókját nem sikerült activálni!</p>
+					  <p th:if="${param.regsuccess}" >Sikeres regisztráció! Az e-mail címére küldött linkel aktiválja a fiókját.</p>
+					  
+					</div>
+		
+	
+	
+					<div id="liContent">
+					
+						<label class="lcPanel lcLabel" for="username" >E-mail cím: </label><br/>
+						<input class="lcPanel lcTextbox lcBordered" type="text" name="username" id="username" placeholder="E-mail cím" /><br/>
+		
+						<label class="lcPanel lcLabel" for="password" >Jelszó: </label><br/>
+						<input class="lcPanel lcTextbox lcBordered" type="password" name="password" id="password" placeholder="Jelszó" /><br/>
+		
+						<div class="lcCheckbox lcPanel">
+							<label > <input type="checkbox" /> Emlékezz rám</label>
+						</div>
+		
+						<button class="lcPanel lcButton lcBordered" type="submit">Bejelentkezés</button>
+						<p><a class="lcPanel lcLink" href="/registration">Regisztráció</a></p>
+						
+					</div>
+				</div>
+			</form>
+			
+		</div>
+
+
+
+</body>
+</html>

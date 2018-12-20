@@ -1,0 +1,5 @@
+INSERT INTO USERS ( ACTIVATION , CONFIRM_PASSWORD , EMAIL , ENABLED , FULL_NAME , PASSWORD ) VALUES ( '','{noop}','admin@helpdesk.hu',true,'Admin','{noop}') ;
+INSERT INTO roles( role ) VALUES ( 'ADMIN' ) ;
+INSERT INTO user_roles( user_id, role_id ) VALUES (1,1) ;
+insert into tickets ( closed , created , description , enrolled , id , solver , status , subject, REQUESTOR_ID ) values ( '2018-11-21' , '2018-11-21' , 'A számítógép képernyőjén megjelent egy üzenet: "Súlyos rendszerhiba történt!"' , '2018-11-21' , 1 , '' , 'Megoldóra vár' , 'Rendszerhiba!', 1 );
+insert into tickets ( closed , created , description , enrolled , id , solver , status , subject, REQUESTOR_ID ) values ( '2018-11-21' , '2018-11-21' , 'Kovács Norbert gépén megszakadt a hálózati kapcsolat.' , '2018-11-21' , 2 , 'Megoldó 2' , 'Folyamatban' , 'Nincs hálózati kapcsolat', 1 );

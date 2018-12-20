@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/main}">
+<head>
+	<title>Helpdesk kezdőlap</title>
+</head>
+<body>
+		
+	<div layout:fragment="loginContent">
+
+		<form name="newticket" th:action="@{/newtick}" th:object="${ticket}" method="post">
+		
+			<div id="ticket-div" class="border">
+				<div id="ticket-content">
+					<label class="prLabel">Bejelentő: <span class="prLabel-span" th:text="${ticketRequestor}">Admin</span></label>
+<!-- 					<input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" th:text="|Bejelentő: ${ticketRequestor}|"></input> -->
+					
+					<label class="prLabel tcLabel">Bejelentés megnevezése: </label>
+					<input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" th:field="*{subject}" placeholder="A hiba rövid leírása" required="true"></input>
+					
+					<div class="container">
+				
+						<div id="pr-tc-left">
+					
+							<label class="prLabel tcLabel">A hiba részletes leírása: </label>
+							<textarea id="incident-desc" class="prTextarea scroll" th:field="*{description}"></textarea>
+					
+							<button class="lcButton lcPanel prButton prPanel" type="submit">Hiba mentése</button>
+							<a class="lcButton lcPanel prButton prPanel" href="/incidents">Mégse</a>
+							
+						</div>
+
+						<div id="pr-tc-right">
+					
+							<label class="prLabel tcLabel">Csatolmányok:</label>
+							<div id="attach" class="border scroll">
+						
+							</div>
+							<a class="lcButton lcPanel prButton prPanel">Dokumentum csatolása</a>
+					
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</form>
+	</div>
+		
+</body>
+</html>

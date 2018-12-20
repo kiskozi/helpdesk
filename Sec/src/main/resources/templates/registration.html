@@ -1,0 +1,61 @@
+<!-- <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %> -->
+<!-- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> -->
+<!-- <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>  -->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+
+      layout:decorate="~{layouts/main}">
+      
+      
+      <!-- 	  xmlns="http://www.springframework.org/tags/form"
+      		  xmlns="http://www.springframework.org/tags"
+	  xmlns="http://www.springframework.org/tags/form" -->
+      
+<head>
+	<title>Helpdesk storik</title>
+</head>
+<body>
+		
+	<div layout:fragment="loginContent">
+		
+		<form name="registration" th:action="@{/reg}" th:object="${user}" method="post" class="form-signin">
+		
+		
+			<div class="container">
+				
+				
+					<div id="message">
+					  <h1>Kérem regisztráljon. </h1>
+					</div>
+	
+					<div id="liContent">
+					
+						<label class="lcPanel lcLabel" for="username" >Teljes név: </label><br/>
+						<input class="lcPanel lcTextbox lcBordered" type="text" name="fullName" id="fullName" th:field="*{fullName}" placeholder="Név" /><br/>
+					
+						<label class="lcPanel lcLabel" for="username" >E-mail cím: </label><br/>
+						<input class="lcPanel lcTextbox lcBordered" type="text" name="username" id="username" th:field="*{email}" placeholder="E-mail cím" /><br/>
+						<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+						
+						<label class="lcPanel lcLabel" for="password" >Jelszó: </label><br/>
+						<input class="lcPanel lcTextbox lcBordered" type="password" name="password" id="password" th:field="*{password}" placeholder="Jelszó" /><br/>
+						<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+						
+						<label class="lcPanel lcLabel" for="confirmPassword" >Jelszó megerősítése: </label><br/>
+						<input class="lcPanel lcTextbox lcBordered" type="password" name="confirmPassword" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Jelszó" /><br/>
+						<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
+						
+						<br/>
+						<button class="lcPanel lcButton lcBordered" type="submit">Regisztráció</button>
+						
+					</div>
+				</div>
+			
+			
+		</form>
+
+	</div>
+		
+</body>
+</html>

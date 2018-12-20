@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/main}">
+<head>
+	<title>Helpdesk kezdőlap</title>
+</head>
+<body>
+		
+	<div layout:fragment="loginContent">
+		
+		<div class="container">
+			<div id="page-left" class="border">
+				<p>Bejelentések: </p>
+
+				<div id="incidents" class="scroll">
+<!-- 					<form th:action="@{/inc}" th:object="${ticketSelect}" method="post"> -->
+					<div th:each="ticket : ${tickets}">
+						<a class="lcLink plLink" th:href="@{/incidents(id=${ticket.id})}" th:text="${ticket.id} + ': ' + ${ticket.subject}"></a>
+						
+					</div>
+<!-- 					</form> -->
+				</div>
+
+				<a class="lcButton lcPanel" href="/newticket">Új hiba bejelentése</a>
+
+			</div>
+
+			<div id="page-right" class="border">
+			  	
+			  	<div th:if="${ticketIsSelected == false}" id="page-right-content" class="scroll">
+			  		<h1 id="noselected-div">Válasszon ki egy hibajegyet a megtekintéshez.</h1>
+			  	</div>
+			  	
+				<div th:if="${ticketIsSelected}" id="page-right-content" class="scroll">
+				
+				<form name="editticket" th:action="@{/incidents} + '?id=' + ${selectedTicket?.id}" method="post">
+					
+					<label class="prLabel">Bejelentés azonosítója: <span class="prLabel-span" th:text="${selectedTicket?.id}"></span></label>
+					<label class="prLabel">Bejelentés státusza: <span class="prLabel-span" th:text="${selectedTicket?.status}"></span></label>
+					<label class="prLabel" th:if="${selectedTicket?.status == 'Folyamatban'}">A probléma megoldásán dolgozik: <span class="prLabel-span" th:text="${selectedTicket?.solver}"/></label>
+					<label class="prLabel">Bejelentő: <span class="prLabel-span" th:text="(${selectedTicket?.requestor} != null ? ${selectedTicket?.requestor.fullName} : '')"></span></label>
+					<label class="prLabel">Bejelentő címe: <span class="prLabel-span" ></span></label>
+					<label class="prLabel">Bejelentő telefonszáma: <span class="prLabel-span" ></span></label>
+					<label class="prLabel">Bejelentés megnevezése: <span class="prLabel-span" th:text="(${selectedTicket?.subject} != null ? ${selectedTicket?.subject} : '')"></span></label>
+					
+					<div class="container">
+				
+						<div id="pr-tc-left">
+					
+							<label class="prLabel tcLabel">Hiba leírása: </label>
+					
+							<textarea id="incident-desc" class="prTextarea scroll" th:text="${selectedTicket?.description}" readonly></textarea>
+					
+							<input th:if="${selectedTicket?.status == 'Folyamatban'}" class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="Bejelentés lezárása" />
+							<input th:if="${selectedTicket?.status == 'Megoldóra vár'}" class="lcButton lcPanel prButton prPanel" type="submit" name="enroll" value="Bejelentés felvétele" />
+							<input th:if="${selectedTicket?.status == 'Folyamatban'}" class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="Bejelentés leadása" />
+							
+<!-- 							<button class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="close">Bejelentés lezárása</button> -->
+<!-- 							<button class="lcButton lcPanel prButton prPanel" type="submit" name="enroll" value="enroll">Bejelentés felvétele</button> -->
+<!-- 							<button class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="sendback">Bejelentés leadása</button> -->
+							
+						</div>
+						
+						<div id="pr-tc-right">
+					
+							<label class="prLabel tcLabel">Csatolmányok:</label>
+							<div id="attach" class="border scroll">
+								<div><a class="lcLink plLink attach-link" href="">csat1.pdf</a></div>
+							</div>
+						<button class="lcButton lcPanel prButton prPanel">Dokumentum csatolása</button>
+					
+						</div>
+				
+					</div>
+					</form>
+					
+					<label class="prLabel tcLabel">Üzenetek: </label>
+				  
+					<textarea id="incident-messages" class="prTextarea scroll" readonly>Csevegés...</textarea>
+				  
+				    <input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" id="" placeholder="Üzenet." required="true" />
+					<button class="lcButton lcPanel prButton prPanel">Küldés</button>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+		
+</body>
+</html>
