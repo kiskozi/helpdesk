@@ -1,14 +1,17 @@
 package com.sec.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -39,6 +42,12 @@ public class Ticket {
 	private String status;
 	
 	private Date closed;
+	
+	@OneToMany(mappedBy= "ownerTicket")
+	private Set<Attachment> attachments = new HashSet<Attachment>();
+	
+	@OneToOne(mappedBy= "messagesTicket")
+	private Message message;
 	
 	public Ticket() {
 		
@@ -114,6 +123,22 @@ public class Ticket {
 
 	public void setClosed(Date closed) {
 		this.closed = closed;
+	}
+
+	public Set<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
+	}
+
+	public Message getMessage() {
+		return message;
+	}
+
+	public void setMessage(Message message) {
+		this.message = message;
 	}
 	
 	

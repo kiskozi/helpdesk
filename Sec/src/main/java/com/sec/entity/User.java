@@ -39,6 +39,10 @@ public class User {
 	
 	private Boolean enabled;
 	
+	private String lastTicketCategory;
+	
+	private String lastSelectedRole;
+	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "user_roles",
@@ -117,6 +121,22 @@ public class User {
 		this.enabled = enabled;
 	}
 
+	public String getLastTicketCategory() {
+		return lastTicketCategory;
+	}
+
+	public void setLastTicketCategory(String lastTicketCategory) {
+		this.lastTicketCategory = lastTicketCategory;
+	}
+
+	public String getLastSelectedRole() {
+		return lastSelectedRole;
+	}
+
+	public void setLastSelectedRole(String lastSelectedRole) {
+		this.lastSelectedRole = lastSelectedRole;
+	}
+
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -130,6 +150,14 @@ public class User {
 			this.roles = new HashSet<>();
 		}
 		this.roles.add(new Role(roleName));
+	}
+
+	public Set<Ticket> getTickets() {
+		return tickets;
+	}
+
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 	
 }

@@ -7,8 +7,8 @@
 <body>
 		
 	<div layout:fragment="loginContent">
-
-		<form name="newticket" th:action="@{/newtick}" th:object="${ticket}" method="post">
+	
+		<form name="newticket" th:action="@{/newtick}" th:object="${ticket}" enctype="multipart/form-data" method="post">
 		
 			<div id="ticket-div" class="border">
 				<div id="ticket-content">
@@ -34,9 +34,12 @@
 					
 							<label class="prLabel tcLabel">Csatolmányok:</label>
 							<div id="attach" class="border scroll">
-						
 							</div>
-							<a class="lcButton lcPanel prButton prPanel">Dokumentum csatolása</a>
+							
+							<label id="attach-label" class="lcButton lcPanel prButton prPanel">Fájlok csatolása
+								<input type="file" name="uploadingFiles" id="uploadingFiles" multiple onchange="showname()" />
+							</label>
+							
 					
 						</div>
 					</div>
@@ -44,7 +47,28 @@
 				</div>
 			</div>
 		</form>
-	</div>
 		
+		
+<script type="text/javascript">
+			function showname() {
+				var del = document.getElementById('attach');
+				while (del.hasChildNodes()) {   
+					del.removeChild(del.firstChild);
+					}
+			    var name = document.getElementById('uploadingFiles');
+			    for(var index = 0; index < name.files.length; index++) {
+			    	var newdiv = document.createElement('div');
+			    	var newcontent = document.createElement('a');
+			    	newcontent.classList.add('lcLink');
+			    	newcontent.classList.add('plLink');
+			    	newcontent.classList.add('attach-link');
+			    	newcontent.appendChild(document.createTextNode(name.files.item(index).name));
+			    	newdiv.appendChild(newcontent);
+				    document.getElementById('attach').appendChild(newdiv);
+			    }
+			};
+</script>
+		
+	</div>
 </body>
 </html>

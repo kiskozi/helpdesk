@@ -12,6 +12,16 @@ import com.sec.entity.User;
 public interface TicketService {
 
 	List<Ticket> findAll();
+	
+	List<Ticket> findByStatus(String status);
+	
+	List<Ticket> findByRequestorAndStatus(User requestor, String status);
+	
+	List<Ticket> findBySolverAndStatus(String solver, String status);
+	
+	List<Ticket> categorySelector(User user);
+	
+//	List<Ticket> categorySelector(String selectedCategory);
 
 	Optional<Ticket> findById(Long id);
 

@@ -8,7 +8,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Helpdesk</title>
-		<link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}" >
 	</head>
 	
 	<body>
@@ -19,7 +19,7 @@
 			<div id="page-top-right">
 				<form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
 					Bejelentkezve, mint: <span id="loginname" sec:authentication="name"></span><br/>
-<!-- 					Bejelentkezve, mint: <span th:text="${user.fullName}"></span> -->
+<!-- 					Bejelentkezve, mint: <span th:text="${authenticatedUser.fullName}"></span> -->
 					<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
 				</form>
 			</div>

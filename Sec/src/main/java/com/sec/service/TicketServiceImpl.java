@@ -1,5 +1,6 @@
 package com.sec.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,47 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public List<Ticket> findAll() {
 		return ticketRepository.findAll();
+	}
+	
+	@Override
+	public List<Ticket> findByStatus(String status) {
+		return ticketRepository.findByStatus(status);
+	}
+	
+	@Override
+	public List<Ticket> findByRequestorAndStatus(User requestor, String status) {
+		return ticketRepository.findByRequestorAndStatus(requestor, status);
+	}
+	
+	@Override
+	public List<Ticket> findBySolverAndStatus(String solver, String status){
+		return ticketRepository.findBySolverAndStatus(solver, status);
+	}
+
+	@Override
+	public List<Ticket> categorySelector(User user) {
+		
+		List<Ticket> tickets = new ArrayList<>();
+		
+		switch (user.getLastSelectedRole()) {
+		case "Bejelentő":
+			tickets = findByRequestorAndStatus(user, user.getLastTicketCategory());
+			break;
+		case "Megoldó":
+			if (user.getLastTicketCategory().equals(TICKET_STATUS_WAITING)) {
+				tickets = findBySolverAndStatus(null , user.getLastTicketCategory());
+			} else {
+				tickets = findBySolverAndStatus(user.getFullName(), user.getLastTicketCategory());
+			}
+			break;
+		case "Adminisztrátor":
+			tickets = findByStatus(user.getLastTicketCategory());
+			break;
+		default:
+    		System.out.println("nincs kiválasztva");
+    		break;
+		}		
+		return tickets;
 	}
 	
 	@Override
@@ -73,9 +115,12 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public void sendBack(Ticket selectedTicket) {
 		selectedTicket.setEnrolled(null);
-		selectedTicket.setSolver("");
+		selectedTicket.setSolver(null);
 		selectedTicket.setStatus(TICKET_STATUS_WAITING);
 		ticketRepository.save(selectedTicket);
 	}
+
+	
+
 
 }

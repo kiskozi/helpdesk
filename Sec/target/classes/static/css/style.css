@@ -109,7 +109,13 @@
 	
 }
 
+.selectedButton {
+	color: #A2A2FF;
+	background-color: #FFFFFF;
+}
+
 .lcButton:hover{
+	color: #FFFFFF;
 	background-color: #C7C7FF;
 }
 
@@ -231,6 +237,14 @@
 	margin: auto auto auto 10%;
 }
 
+#attach-label {
+	margin: auto 5px 50px auto;
+}
+
+input[type="file"] {
+    display: none;
+}
+
 .prLabel {
 	display: block;
 	margin: auto auto 8px 0px;
@@ -263,6 +277,14 @@
 
 .prLabel-span {
 	font-weight: bold;
+}
+
+#incident-messages {
+	overflow: auto;
+}
+
+#messageDate {
+	font-size: 10px;
 }
 
 /*page-both*/

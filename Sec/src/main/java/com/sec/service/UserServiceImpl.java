@@ -1,7 +1,9 @@
 package com.sec.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +29,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	
 	private final String USER_ROLE = "USER";
+	
+	private final String TICKETCATEGORY = "Megoldóra vár";
 	
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmailService emailService) {
@@ -72,6 +76,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		System.out.println("activation/" + code);
 		userToRegister.setEnabled(false);
 		userToRegister.setActivation(code);
+		userToRegister.setLastTicketCategory(TICKETCATEGORY);
+		userToRegister.setLastSelectedRole(rolesToList(userToRegister.getRoles()).get(0));
 		userRepository.save(userToRegister);
 //		e-mail küldés
 //		emailService.sendMessage(userToRegister.getEmail(), userToRegister.getFullName(), code);
@@ -99,6 +105,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userRepository.save(user);
 		return "activationsuccess";
 	}
+
+	@Override
+	public void switchLastTicketCategory(User loggedInUser, String selectedCategory) {
+		loggedInUser.setLastTicketCategory(selectedCategory);
+		userRepository.save(loggedInUser);
+	}
+	
+	@Override
+	public void switchLastSelectedRole(User loggedInUser, String selectedRole) {
+		loggedInUser.setLastSelectedRole(selectedRole);
+		userRepository.save(loggedInUser);
+	}
+
+	@Override
+	public ArrayList<String> rolesToList(Set<Role> roles) {
+		ArrayList<String> rolesArray = new ArrayList<>();
+		for (Role role : roles)
+			switch (role.getRole()) {
+    			case "ADMIN": 
+    				rolesArray.add("Adminisztrátor");
+    				break;
+				case "REQUESTOR": 
+			    	rolesArray.add("Megoldó");
+			    	break;
+				case "USER": 
+			    	rolesArray.add("Bejelentő");
+			    	break;
+				default:
+			    	break;
+			}
+		Collections.sort(rolesArray);
+		return rolesArray;
+	}
+
+	
 	
 	
 	
