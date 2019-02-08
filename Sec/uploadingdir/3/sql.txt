@@ -1,0 +1,17 @@
+
+INSERT INTO USERS ( ACTIVATION , CONFIRM_PASSWORD , EMAIL , ENABLED , FULL_NAME , PASSWORD ) VALUES ( '','pass','admin',true,'admin','pass') ;
+INSERT INTO roles( role ) VALUES ( 'ADMIN') ;
+INSERT INTO user_roles( user_id, role_id ) VALUES ( 1,1) ;
+
+insert into tickets ( closed , created , description , enrolled , id , requestor , solver , status , subject ) values ( '2018-11-21' , '2018-11-21' , 'Ez a teszt szöveg' , '2018-11-21' , 1 , 'Valaki' , 'Megoldó' , 'Új' , 'Teszt!' )
+
+INSERT INTO USERS ( ACTIVATION , CONFIRM_PASSWORD , EMAIL , ENABLED , FULL_NAME , PASSWORD ) VALUES ( '','{noop}','admin@helpdesk.hu',true,'Admin','{noop}') ;
+INSERT INTO roles( role ) VALUES ( 'ADMIN' ) ;
+INSERT INTO user_roles( user_id, role_id ) VALUES (1,1) ;
+insert into tickets ( closed , created , description , enrolled , id , solver , status , subject, REQUESTOR_ID ) values ( '2018-11-21' , '2018-11-21' , 'A számítógép képernyõjén megjelent egy üzenet: "Súlyos rendszerhiba történt!"' , '2018-11-21' , 1 , '' , 'Megoldóra vár' , 'Rendszerhiba!', 1 );
+insert into tickets ( closed , created , description , enrolled , id , solver , status , subject, REQUESTOR_ID ) values ( '2018-11-21' , '2018-11-21' , 'Kovács Norbert gépén megszakadt a hálózati kapcsolat.' , '2018-11-21' , 2 , 'Megoldó 2' , 'Folyamatban' , 'Nincs hálózati kapcsolat', 1 );
+INSERT INTO ATTACHMENTS ( ID , PATH , OWNER_TICKET_ID ) VALUES ( 1 , 'hiba.pdf' , 1 ) ;
+INSERT INTO ATTACHMENTS ( ID , PATH , OWNER_TICKET_ID ) VALUES ( 2 , 'doksi.docx' , 1 ) ;
+INSERT INTO ATTACHMENTS ( ID , PATH , OWNER_TICKET_ID ) VALUES ( 3 , 'screenshot.jpg' , 2 ) ;
+INSERT INTO ATTACHMENTS ( ID , PATH , OWNER_TICKET_ID ) VALUES ( 4 , 'lista.xlsx' , 2 ) ;
+INSERT INTO ATTACHMENTS ( ID , PATH , OWNER_TICKET_ID ) VALUES ( 5 , 'ablak.pdf' , 2 ) ;
