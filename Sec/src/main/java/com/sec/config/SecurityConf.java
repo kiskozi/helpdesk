@@ -1,13 +1,19 @@
 package com.sec.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import com.sec.service.UserService;
 
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Configuration
 public class SecurityConf extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+	UserService userService;
 	
 //	@Bean
 //	public LayoutDialect layoutDialect() {
@@ -52,6 +58,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter{
 			.formLogin()
 				.loginPage("/login")
 				.permitAll()
+				.and()
+			.rememberMe()
+				.key("uniqueAndSecret")
+//				.tokenValiditySeconds(24 * 60 * 60) // expired time = 1 day
+				.userDetailsService((UserDetailsService) userService)
 				.and()
 			.logout()
 				.logoutSuccessUrl("/login?logout")

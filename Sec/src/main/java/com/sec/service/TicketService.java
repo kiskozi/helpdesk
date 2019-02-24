@@ -19,9 +19,15 @@ public interface TicketService {
 	
 	List<Ticket> findBySolverAndStatus(String solver, String status);
 	
+	List<Ticket> findByRequestor(User requestor);
+	
+	List<Ticket> findBySolver(String solver);
+	
 	List<Ticket> categorySelector(User user);
 	
 //	List<Ticket> categorySelector(String selectedCategory);
+
+	Ticket findInAllowedTickets(User user, Long id);
 
 	Optional<Ticket> findById(Long id);
 

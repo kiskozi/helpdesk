@@ -45,6 +45,16 @@ public class TicketServiceImpl implements TicketService {
 	public List<Ticket> findBySolverAndStatus(String solver, String status){
 		return ticketRepository.findBySolverAndStatus(solver, status);
 	}
+	
+	@Override
+	public List<Ticket> findByRequestor(User requestor){
+		return ticketRepository.findByRequestor(requestor);
+	}
+	
+	@Override
+	public List<Ticket> findBySolver(String solver){
+		return ticketRepository.findBySolver(solver);
+	}
 
 	@Override
 	public List<Ticket> categorySelector(User user) {
@@ -68,8 +78,34 @@ public class TicketServiceImpl implements TicketService {
 		default:
     		System.out.println("nincs kiválasztva");
     		break;
-		}		
+		}
 		return tickets;
+	}
+	
+	@Override
+	public Ticket findInAllowedTickets(User user, Long id) {
+		
+		List<Ticket> tickets = new ArrayList<>();
+		
+		switch (user.getLastSelectedRole()) {
+		case "Bejelentő":
+			tickets = findByRequestor(user);
+			break;
+		case "Megoldó":
+			tickets = findBySolver(null);
+			tickets.addAll(findBySolver(user.getFullName()));
+			break;
+		case "Adminisztrátor":
+			tickets = findAll();
+			break;
+		default:
+    		System.out.println("nincs kiválasztva");
+    		break;
+		}
+		for (Ticket ticket : tickets) {
+			if (ticket.getId() == id) return ticket;
+		}
+		return null;
 	}
 	
 	@Override
@@ -120,6 +156,7 @@ public class TicketServiceImpl implements TicketService {
 		ticketRepository.save(selectedTicket);
 	}
 
+	
 	
 
 

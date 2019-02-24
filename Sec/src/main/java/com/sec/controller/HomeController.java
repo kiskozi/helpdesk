@@ -1,6 +1,7 @@
 package com.sec.controller;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
@@ -118,38 +119,46 @@ public class HomeController {
 		
 		model.addAttribute("roles", userService.rolesToList(loggedInUser.getRoles()));
 		
-		Optional<Ticket> ticket = ticketService.findById(ticketService.idToLong(ticketId));
-		if (!ticket.isPresent()) {
+		Ticket selectedTicket = ticketService.findInAllowedTickets(loggedInUser, ticketService.idToLong(ticketId));
+		if (selectedTicket == null) {
 			model.addAttribute("ticketIsSelected", false);
-			return "incidents";
-		}
-		Ticket selectedTicket = ticket.get();
-		model.addAttribute("ticketIsSelected", true);
-		model.addAttribute("selectedTicket", selectedTicket);
+		} else {
+			model.addAttribute("ticketIsSelected", true);
+			model.addAttribute("selectedTicket", selectedTicket);
+			
 		
-		if (ticketClose != null) {
-			System.out.println("lezárás");
-			ticketService.closeTicket(selectedTicket);
-		} else if (ticketEnroll != null) {
-			System.out.println("felvesz");
-			ticketService.enrollTicket(selectedTicket, loggedInUser.getFullName());
-		} else if (ticketSendBack != null) {
-			System.out.println("visszaküld");
-			ticketService.sendBack(selectedTicket);
-		}
+//			Ticket ticket = ticketService.findInAllowedTickets(loggedInUser, ticketService.idToLong(ticketId));
+//			if (ticket == null) {
+//				model.addAttribute("ticketIsSelected", false);
+//				return "incidents";
+//			}
+//			Ticket selectedTicket = ticket;
+//			model.addAttribute("ticketIsSelected", true);
+//			model.addAttribute("selectedTicket", selectedTicket);
 		
-		if (uploadingFiles != null) {
-			for(MultipartFile uploadedFile : uploadingFiles) {
-				attachmentService.upload(new Attachment(), selectedTicket, uploadedFile);
+			if (ticketClose != null) {
+				System.out.println("lezárás");
+				ticketService.closeTicket(selectedTicket);
+			} else if (ticketEnroll != null) {
+				System.out.println("felvesz");
+				ticketService.enrollTicket(selectedTicket, loggedInUser.getFullName());
+			} else if (ticketSendBack != null) {
+				System.out.println("visszaküld");
+				ticketService.sendBack(selectedTicket);
 			}
+			
+			if (uploadingFiles != null) {
+				for(MultipartFile uploadedFile : uploadingFiles) {
+					attachmentService.upload(new Attachment(), selectedTicket, uploadedFile);
+				}
+			}
+			model.addAttribute("attachments", attachmentService.findByOwnerTicket(selectedTicket));
+			
+			if (messageToSend != null) {
+				messageService.sendMessage(selectedTicket, loggedInUser.getFullName(), messageToSend, new Date());
+			}
+			model.addAttribute("allMessages", messageService.getMessages(selectedTicket));
 		}
-		model.addAttribute("attachments", attachmentService.findByOwnerTicket(selectedTicket));
-		
-		if (messageToSend != null) {
-			messageService.sendMessage(selectedTicket, loggedInUser.getFullName(), messageToSend, new Date());
-		}
-		model.addAttribute("allMessages", messageService.getMessages(selectedTicket));
-		
 		
 		
 		if (selectedRole != null) {
@@ -161,8 +170,6 @@ public class HomeController {
 			userService.switchLastTicketCategory(loggedInUser, selectedCategory);
 		}
 		model.addAttribute("tickets", ticketService.categorySelector(loggedInUser));
-//		model.addAttribute("tickets", ticketService.categorySelector(loggedInUser.getLastTicketCategory()));
-		
 		model.addAttribute("selectedCategory", loggedInUser.getLastTicketCategory());
 		
 		return "incidents";

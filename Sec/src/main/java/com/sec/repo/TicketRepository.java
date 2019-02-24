@@ -19,5 +19,9 @@ public interface TicketRepository extends CrudRepository<Ticket, Long>{
 	List<Ticket> findByRequestorAndStatus(User requestor, String status);
 	
 	List<Ticket> findBySolverAndStatus(String solver, String status);
+
+	List<Ticket> findByRequestor(User requestor);
+
+	List<Ticket> findBySolver(String solver);
 	
 }

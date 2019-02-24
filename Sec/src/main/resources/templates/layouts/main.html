@@ -12,19 +12,31 @@
 	</head>
 	
 	<body>
-	
-	
-		<div id="page-top">
-			<div id="page-top-left">HelpDesk</div>
-			<div id="page-top-right">
-				<form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
-					Bejelentkezve, mint: <span id="loginname" sec:authentication="name"></span><br/>
-<!-- 					Bejelentkezve, mint: <span th:text="${authenticatedUser.fullName}"></span> -->
-					<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
-				</form>
+		
+		<div id="page-top" class="flex-container">
+			<div id="page-top-left" class="logo">HelpDesk</div>
+			<div sec:authorize="isAuthenticated()" id="page-top-right" class="menu">
+				<span id="loginname" sec:authentication="name"></span>
+				<ul>
+					<a class="menu-link" href="/"><li>Hibajegyek</li></a>
+					<a class="menu-link" href="#"><li>Profilom</li></a>
+					<a class="menu-link" href="#"><li>Kontaktok</li></a>
+					<form id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+						<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;"><li>Kijelentkezés</li></a>
+					</form>
+				</ul>
 			</div>
-			
 		</div>
+	
+<!-- 		<div id="page-top"> -->
+<!-- 			<div id="page-top-left">HelpDesk</div> -->
+<!-- 			<div id="page-top-right"> -->
+<!-- 				<form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline"> -->
+<!-- 					Bejelentkezve, mint: <span id="loginname" sec:authentication="name"></span><br/> -->
+<!-- 					<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a> -->
+<!-- 				</form> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 		
 		<div id="separator"></div>
 		

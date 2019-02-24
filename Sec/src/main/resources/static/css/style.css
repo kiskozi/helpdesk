@@ -12,6 +12,19 @@
 }
 
 /*page-top*/
+.flex-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.logo {
+	flex-basis:99%
+}
+
+.menu {
+	flex-basis:1%
+}
+
 #page-top {
 	width: 75%;
 	padding: 15px;
@@ -29,7 +42,6 @@
 }
 
 #page-top-right {
-	text-align: right;
 	color: #fff;
 	font-size: 12px;
 	width: 100%;
@@ -52,6 +64,61 @@
 #logout:hover{
 	color: #D1D4FF;
 	text-decoration: none;
+}
+
+.menu-link {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.menu-link:active{
+	color: #000000;
+	text-decoration: none;
+}
+
+.menu-link:hover{
+	color: #D1D4FF;
+	text-decoration: none;
+}
+
+.menu {
+	padding: 7px;
+	margin: 0px;
+	background-color: #b2b2FF;
+	border-radius: 15px 0px 15px 0px;
+}
+
+.menu:hover {
+	background-color: #549AE1;
+	cursor: default;
+}
+
+.menu ul {
+	list-style: none;
+	display: none;
+	position: absolute;
+	background-color: #7878FF;
+	margin-top: 8px;
+	margin-left: -7px;
+	border-bottom-right-radius: 15px;
+	box-shadow: 5px 5px 10px grey;
+}
+
+.menu ul li {
+	padding: 7px;
+	border-left: solid 4px #7878FF;
+}
+
+.menu ul li:hover {
+	padding: 7px;
+	background: #99A3FF;
+	border-left: solid 4px #2F65CC;
+	border-radius: 0px 15px 15px 0px;
+}
+
+.menu:hover > ul {
+	display: block;
+	
 }
 
 #separator {
