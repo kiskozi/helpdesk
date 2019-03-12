@@ -35,13 +35,17 @@ public class User {
 	
 	private String fullName;
 	
+	private String address;
+	
+	private String phoneNumber;
+	
 	private String activation;
 	
 	private Boolean enabled;
 	
-	private String lastTicketCategory;
+	private String SelectedStatus;
 	
-	private String lastSelectedRole;
+	private String selectedCategory;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
@@ -53,6 +57,14 @@ public class User {
 	
 	@OneToMany(mappedBy= "requestor")
 	private Set<Ticket> tickets = new HashSet<Ticket>();
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_categories",
+			joinColumns = {@JoinColumn(name="user_id")},
+			inverseJoinColumns = {@JoinColumn(name="category_id")}
+	)
+	private Set<Category> categories = new HashSet<Category>();
 	
 	public User() {
 		
@@ -105,6 +117,22 @@ public class User {
 		this.fullName = fullName;
 	}
 	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	public String getActivation() {
 		return activation;
 	}
@@ -121,20 +149,20 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public String getLastTicketCategory() {
-		return lastTicketCategory;
+	public String getSelectedStatus() {
+		return SelectedStatus;
 	}
 
-	public void setLastTicketCategory(String lastTicketCategory) {
-		this.lastTicketCategory = lastTicketCategory;
+	public void setSelectedStatus(String SelectedStatus) {
+		this.SelectedStatus = SelectedStatus;
 	}
 
-	public String getLastSelectedRole() {
-		return lastSelectedRole;
+	public String getSelectedCategory() {
+		return selectedCategory;
 	}
 
-	public void setLastSelectedRole(String lastSelectedRole) {
-		this.lastSelectedRole = lastSelectedRole;
+	public void setSelectedCategory(String selectedCategory) {
+		this.selectedCategory = selectedCategory;
 	}
 
 	public Set<Role> getRoles() {
@@ -158,6 +186,21 @@ public class User {
 
 	public void setTickets(Set<Ticket> tickets) {
 		this.tickets = tickets;
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+	
+	public void addCategories(String categoryName) {
+		if (this.categories == null || this.categories.isEmpty()) {
+			this.categories = new HashSet<>();
+		}
+		this.categories.add(new Category(categoryName));
 	}
 	
 }

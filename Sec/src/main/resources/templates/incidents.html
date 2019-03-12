@@ -8,14 +8,22 @@
 		
 	<div layout:fragment="loginContent">
 		
-		<div>
-			<form id="roleselect" name="roleselect" th:action="@{/}" method="post">
+		<div th:if="${#arrays.length(categories)} &gt; 1">
+			<form id="categoryselect" name="categoryselect" th:action="@{/}" method="post">
 			Jogosultság: 
-			<select name="selectedRole" onchange="this.form.submit()" >
- 				<option th:each="role : ${roles}" th:selected="(${lastRole} == ${role}) ? true : false " th:text="${role}" ></option>
+			<select name="selectedCategory" onchange="this.form.submit()" >
+ 				<option th:each="category : ${categories}" th:selected="(${lastCategory} == ${category.category}) ? true : false " th:text="${category.category}" ></option>
 			</select>
 			</form>
 		</div>
+<!-- 		<div> -->
+<!-- 			<form id="roleselect" name="roleselect" th:action="@{/}" method="post"> -->
+<!-- 			Jogosultság:  -->
+<!-- 			<select name="selectedRole" onchange="this.form.submit()" > -->
+<!--  				<option th:each="role : ${roles}" th:selected="(${lastRole} == ${role}) ? true : false " th:text="${role}" ></option> -->
+<!-- 			</select> -->
+<!-- 			</form> -->
+<!-- 		</div> -->
 		
 		
 		
@@ -29,9 +37,9 @@
 					
 <!-- 					<form id="ticketList" name="ticketList" th:action="@{/incidents} + '?id=' + ${selectedTicket?.id}" method="post"></form> -->
 					<form id="ticketList" name="ticketList" th:action="${ticketIsSelected} ? @{/incidents} + '?id=' + ${selectedTicket?.id} : @{/}" method="post"></form>
-					<input form="ticketList" class="lcButton lcPanel prButton prPanel" th:classappend="${selectedCategory} == 'Megoldóra vár' ? 'selectedButton'" type="submit" name="category" value="Megoldóra vár" />
-					<input form="ticketList" class="lcButton lcPanel prButton prPanel" th:classappend="${selectedCategory} == 'Folyamatban' ? 'selectedButton'" type="submit" name="category" value="Folyamatban" />
-					<input form="ticketList" class="lcButton lcPanel prButton prPanel" th:classappend="${selectedCategory} == 'Lezárt' ? 'selectedButton'" type="submit" name="category" value="Lezárt" />
+					<input form="ticketList" class="lcButton lcPanel prButton prPanel" th:classappend="${selectedStatus} == 'Megoldóra vár' ? 'selectedButton'" type="submit" name="status" value="Megoldóra vár" />
+					<input form="ticketList" class="lcButton lcPanel prButton prPanel" th:classappend="${selectedStatus} == 'Folyamatban' ? 'selectedButton'" type="submit" name="status" value="Folyamatban" />
+					<input form="ticketList" class="lcButton lcPanel prButton prPanel" th:classappend="${selectedStatus} == 'Lezárt' ? 'selectedButton'" type="submit" name="status" value="Lezárt" />
 					
 					<div >
 <!-- 						<p>Megoldóra vár: </p> -->
@@ -63,10 +71,11 @@
 					
 					<label class="prLabel">Bejelentés azonosítója: <span class="prLabel-span" th:text="${selectedTicket?.id}"></span></label>
 					<label class="prLabel">Bejelentés státusza: <span class="prLabel-span" th:text="${selectedTicket?.status}"></span></label>
+					<label class="prLabel">Kategória: <span class="prLabel-span" th:text="${selectedTicket?.category.category}"></span></label>
 					<label class="prLabel" th:if="${selectedTicket?.status == 'Folyamatban'}">A probléma megoldásán dolgozik: <span class="prLabel-span" th:text="${selectedTicket?.solver}"/></label>
 					<label class="prLabel">Bejelentő: <span class="prLabel-span" th:text="(${selectedTicket?.requestor} != null ? ${selectedTicket?.requestor.fullName} : '')"></span></label>
-					<label class="prLabel">Bejelentő címe: <span class="prLabel-span" ></span></label>
-					<label class="prLabel">Bejelentő telefonszáma: <span class="prLabel-span" ></span></label>
+					<label class="prLabel">Bejelentő címe: <span class="prLabel-span" th:text="${selectedTicket?.requestor.address}"></span></label>
+					<label class="prLabel">Bejelentő telefonszáma: <span class="prLabel-span" th:text="${selectedTicket?.requestor.phoneNumber}"></span></label>
 					<label class="prLabel">Bejelentés megnevezése: <span class="prLabel-span" th:text="(${selectedTicket?.subject} != null ? ${selectedTicket?.subject} : '')"></span></label>
 					
 					<div class="container">
@@ -78,11 +87,11 @@
 					
 							<textarea id="incident-desc" class="prTextarea scroll" th:text="${selectedTicket?.description}" readonly></textarea>
 							
-							<input th:if="${selectedTicket?.status == 'Folyamatban' && lastRole != 'Bejelentő'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="Bejelentés lezárása" />
-							<input th:if="${selectedTicket?.status == 'Megoldóra vár' && lastRole == 'Bejelentő'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="Bejelentés visszavonása" />
-							<input th:if="${selectedTicket?.status == 'Megoldóra vár' && lastRole != 'Bejelentő'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="enroll" value="Bejelentés felvétele" />
-							<input th:if="${selectedTicket?.status == 'Folyamatban' && lastRole != 'Bejelentő'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="Bejelentés leadása" />
-							<input th:if="${selectedTicket?.status == 'Lezárt' && lastRole == 'Adminisztrátor'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="Bejelentés visszaosztása" />
+							<input th:if="${selectedTicket?.status == 'Folyamatban' && lastCategory != 'Saját'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="Bejelentés lezárása" />
+							<input th:if="${selectedTicket?.status == 'Megoldóra vár' && lastCategory == 'Saját'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="Bejelentés visszavonása" />
+							<input th:if="${selectedTicket?.status == 'Megoldóra vár' && lastCategory != 'Saját'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="enroll" value="Bejelentés felvétele" />
+							<input th:if="${selectedTicket?.status == 'Folyamatban' && lastCategory != 'Saját'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="Bejelentés leadása" />
+							<input sec:authorize="hasRole('ROLE_ADMIN')" th:if="${selectedTicket?.status == 'Lezárt'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="Bejelentés visszaosztása" />
 <!-- 							<input th:if="${selectedTicket?.status == 'Folyamatban'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="close" value="Bejelentés lezárása" /> -->
 <!-- 							<input th:if="${selectedTicket?.status == 'Megoldóra vár'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="enroll" value="Bejelentés felvétele" /> -->
 <!-- 							<input th:if="${selectedTicket?.status == 'Folyamatban'}" form="editticket" class="lcButton lcPanel prButton prPanel" type="submit" name="sendback" value="Bejelentés leadása" /> -->

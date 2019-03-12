@@ -49,6 +49,9 @@ public class Ticket {
 	@OneToOne(mappedBy= "messagesTicket")
 	private Message message;
 	
+	@ManyToOne
+	private Category category;
+	
 	public Ticket() {
 		
 	}
@@ -139,6 +142,14 @@ public class Ticket {
 
 	public void setMessage(Message message) {
 		this.message = message;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 	
 	

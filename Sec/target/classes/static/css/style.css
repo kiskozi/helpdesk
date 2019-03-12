@@ -194,18 +194,18 @@
 	outline: none;
 }
 
-.lcLink:hover, .lcLink:link:hover{
+.lcLink {
+	color: #9999ff;
+	text-decoration: none;
+}
+
+.lcLink:hover {
 	color: #ADADAD;
 	text-decoration: none;
 }
 
-.lcLink:active, .lcLink:link:active{
+.lcLink:active {
 	color: #000000;
-	text-decoration: none;
-}
-
-.lcLink:link{
-	color: #9999ff;
 	text-decoration: none;
 }
 
@@ -352,6 +352,130 @@ input[type="file"] {
 
 #messageDate {
 	font-size: 10px;
+}
+
+#page-profile {
+	font-size: 14px;
+	display: flex;
+	height: 570px;
+	margin: auto;
+}
+
+#page-profile p {
+	width: 100%;
+	text-align: center;
+	margin-bottom: 15px;
+	padding-bottom: 10px;
+	border-bottom: solid 1px #9999FF;
+}
+
+#page-profile-userlist {
+	margin-right: 50px;
+}
+
+#page-profile-userlist ul {
+	list-style: none;
+}
+
+#page-profile-userlist div {
+	width: 250px;
+	max-height: 80%;
+	padding-right: 10px;
+	overflow: auto;
+}
+
+#page-profile-userlist ul li {
+	padding: 3px 10px 3px 3px;
+	font-size: 12px;
+	margin-left: 15px;
+	font-weight: bold;
+}
+
+#page-profile-userlist ul li:hover {
+	margin-left: 12px;
+	border-left: solid 3px #9999FF;
+}
+
+#page-profile-userlist input {
+	font-size: 12px;
+	margin-bottom: 10px;
+	width: 95%;
+}
+
+#page-profile-data {
+	display: flex;
+	flex-direction: column;
+}
+
+#page-profile-data > div {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+#page-profile-data input {
+	margin-left: 5px;
+}
+
+#editRoles > div{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 120px;
+}
+
+#editRoles-center {
+	justify-content: flex-end;
+	flex-basis: 5%;
+	height: 90px;
+}
+
+#rolesButtons{
+	height: 90px;
+	padding: 0px 0px 18px 0px;
+}
+
+#rolesButtons button{
+	font-size: 9px;
+}
+
+#editRoles-left, #editRoles-right {
+	flex-basis: 43%;
+}
+
+#addRoles, #availableRoles {
+	width: 90%;
+	height: 90px;
+	border: solid 1px #9999ff;
+	border-radius: 10px;
+	padding: 5px;
+	font-size: 11px;
+}
+
+.rolesList {
+	height: 90px;
+	padding-right: 5px;
+	overflow: auto;
+}
+
+.rolesList ul li {
+	list-style: none;
+	margin-bottom: 3px;
+	padding-left: 5px;
+}
+
+.rolesList ul li:hover {
+	background-color: rgb(125, 175, 222);
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+#page-profile-data div button{
+	width: 100%;
+	margin: 5px auto 0px auto;
+	text-align: center;
 }
 
 /*page-both*/

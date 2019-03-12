@@ -2,6 +2,7 @@ package com.sec.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sec.entity.Category;
 import com.sec.entity.Role;
 import com.sec.entity.User;
+import com.sec.repo.CategoryRepository;
 import com.sec.repo.RoleRepository;
 import com.sec.repo.UserRepository;
 
@@ -24,19 +27,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	private RoleRepository roleRepository;
 	
+	private CategoryRepository categoryRepository;
+	
 	private EmailService emailService;
 	
 	private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	
 	private final String USER_ROLE = "USER";
 	
-	private final String TICKETCATEGORY = "Megoldóra vár";
+	private final String TICKETSTATUS = "Megoldóra vár";
+	
+	private final String TICKETCATEGORY = "Saját";
 	
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmailService emailService) {
+	public UserServiceImpl( UserRepository userRepository,
+							RoleRepository roleRepository,
+							CategoryRepository categoryRepository,
+							EmailService emailService ) {
+		
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
+		this.categoryRepository = categoryRepository;
 		this.emailService = emailService;
+	}
+	
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
 	}
 
 	@Override
@@ -44,6 +61,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
+	@Override
+	public Set<Role> findUserRolesInnerJoin(Long loggedInUserId) {
+		return userRepository.findUserRolesInnerJoin(loggedInUserId);
+	}
+	
+	@Override
+	public List<Category> findUserCategoriesInnerJoin(Long loggedInUserId) {
+		return userRepository.findUserCategoriesInnerJoin(loggedInUserId);
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = findByEmail(username);
@@ -57,18 +84,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public String registerUser(User userToRegister) {
 		
 		User userCheck = userRepository.findByEmail(userToRegister.getEmail());
-		
 		if (userCheck != null) {
 			return "alreadyExists";
 		}
-		
 		Role userRole = roleRepository.findByRole(USER_ROLE);
 		if (userRole != null) {
 			userToRegister.getRoles().add(userRole);
 		} else {
 			userToRegister.addRoles(USER_ROLE);
 		}
-		
+		Category userCategory = categoryRepository.findByCategory(TICKETCATEGORY);
+		if (userCategory != null) {
+			userToRegister.getCategories().add(userCategory);
+		} else {
+			userToRegister.addCategories(TICKETCATEGORY);
+		}
 		userToRegister.setPassword(encoder.encode(userToRegister.getPassword()));
 		userToRegister.setConfirmPassword(encoder.encode(""));
 		
@@ -76,8 +106,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		System.out.println("activation/" + code);
 		userToRegister.setEnabled(false);
 		userToRegister.setActivation(code);
-		userToRegister.setLastTicketCategory(TICKETCATEGORY);
-		userToRegister.setLastSelectedRole(rolesToList(userToRegister.getRoles()).get(0));
+		userToRegister.setSelectedStatus(TICKETSTATUS);
+		userToRegister.setSelectedCategory(new ArrayList<>(userToRegister.getCategories()).get(0).getCategory());
 		userRepository.save(userToRegister);
 //		e-mail küldés
 //		emailService.sendMessage(userToRegister.getEmail(), userToRegister.getFullName(), code);
@@ -107,14 +137,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public void switchLastTicketCategory(User loggedInUser, String selectedCategory) {
-		loggedInUser.setLastTicketCategory(selectedCategory);
+	public void switchSelectedStatus(User loggedInUser, String SelectedStatus) {
+		loggedInUser.setSelectedStatus(SelectedStatus);
 		userRepository.save(loggedInUser);
 	}
 	
 	@Override
-	public void switchLastSelectedRole(User loggedInUser, String selectedRole) {
-		loggedInUser.setLastSelectedRole(selectedRole);
+	public void switchSelectedCategory(User loggedInUser, String selectedCategory) {
+		loggedInUser.setSelectedCategory(selectedCategory);
 		userRepository.save(loggedInUser);
 	}
 

@@ -1,8 +1,11 @@
 package com.sec.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletResponse;
 
 //import javax.servlet.http.HttpServletRequest;
@@ -27,9 +30,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sec.entity.Attachment;
+import com.sec.entity.Category;
+import com.sec.entity.Role;
 import com.sec.entity.Ticket;
 import com.sec.entity.User;
+import com.sec.repo.RoleRepository;
+import com.sec.repo.UserRepository;
 import com.sec.service.AttachmentService;
+import com.sec.service.CategoryService;
 import com.sec.service.MessageService;
 import com.sec.service.TicketService;
 import com.sec.service.UserDetailsImpl;
@@ -46,6 +54,9 @@ public class HomeController {
 	private TicketService ticketService;
 	private AttachmentService attachmentService;
 	private MessageService messageService;
+	private CategoryService categoryService;
+
+	private RoleRepository roleRepository;
 	
 //	@Autowired
 //	public void setJavaMailSender(EmailService emailService) {
@@ -57,12 +68,17 @@ public class HomeController {
 	public void setUserService(UserService userService,
 								TicketService ticketService,
 								AttachmentService attachmentService,
-								MessageService messageService) {
+								MessageService messageService,
+								CategoryService categoryService,
+								RoleRepository roleRepository) {
 		
 		this.userService = userService;
 		this.ticketService = ticketService;
 		this.attachmentService = attachmentService;
 		this.messageService = messageService;
+		this.categoryService = categoryService;
+
+		this.roleRepository = roleRepository;
 	}
 	
 	private UserValidator userValidator;
@@ -74,28 +90,45 @@ public class HomeController {
 	
 	@RequestMapping("/")
 	public String home(Model model, Authentication authentication,
-						@RequestParam(value="category", required=false) String selectedCategory,
-						@RequestParam(value="selectedRole", required=false) String selectedRole
+						@RequestParam(value="status", required=false) String selectedStatus,
+//						@RequestParam(value="selectedRole", required=false) String selectedRole,
+						@RequestParam(value="selectedCategory", required=false) String selectedCategory
 						) {
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 		
-		model.addAttribute("roles", userService.rolesToList(loggedInUser.getRoles()));
+		model.addAttribute("categories", userService.findUserCategoriesInnerJoin(loggedInUser.getId()));
+//		model.addAttribute("roles", userService.rolesToList(loggedInUser.getRoles()));
 		model.addAttribute("ticketIsSelected", false);
 //		model.addAttribute("tickets", ticketService.findAll());
 		
+//		Set<Ticket> allowedTickets = ticketService.findByRequestorOrSolverOrSolverIsNullAndCategoryIn(
+//				loggedInUser,
+//				loggedInUser.getFullName(),
+//				userService.findUserCategoriesInnerJoin(loggedInUser.getId())
+//				);
+//		for (Ticket t : allowedTickets) {
+//			System.out.println(t.getId());
+//		}
 		
-		if (selectedRole != null) {
-			userService.switchLastSelectedRole(loggedInUser, selectedRole);
-		}
-		model.addAttribute("lastRole", loggedInUser.getLastSelectedRole());
 		
 		if (selectedCategory != null) {
-			userService.switchLastTicketCategory(loggedInUser, selectedCategory);
+			userService.switchSelectedCategory(loggedInUser, selectedCategory);
+		}
+		model.addAttribute("lastCategory", loggedInUser.getSelectedCategory());
+		
+//		
+//		if (selectedRole != null) {
+//			userService.switchLastSelectedRole(loggedInUser, selectedRole);
+//		}
+//		model.addAttribute("lastRole", loggedInUser.getLastSelectedRole());
+//		
+		if (selectedStatus != null) {
+			userService.switchSelectedStatus(loggedInUser, selectedStatus);
 		}
 		model.addAttribute("tickets", ticketService.categorySelector(loggedInUser));
 //		model.addAttribute("tickets", ticketService.categorySelector(loggedInUser.getLastTicketCategory()));
 
-		model.addAttribute("selectedCategory", loggedInUser.getLastTicketCategory());
+		model.addAttribute("selectedStatus", loggedInUser.getSelectedStatus());
 		
 		
 		return "incidents";
@@ -110,14 +143,15 @@ public class HomeController {
 							@RequestParam(value="enroll", required=false) String ticketEnroll,
 							@RequestParam(value="uploadingFiles", required=false) MultipartFile[] uploadingFiles,
 							@RequestParam(value="messageToSend", required=false) String messageToSend,
-							@RequestParam(value="category", required=false) String selectedCategory,
-							@RequestParam(value="selectedRole", required=false) String selectedRole
+							@RequestParam(value="status", required=false) String selectedStatus,
+							@RequestParam(value="selectedCategory", required=false) String selectedCategory
 							) {
 		
 //		UserDetailsImpl loggedInUser = ((UserDetailsImpl) authentication.getPrincipal());
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 		
-		model.addAttribute("roles", userService.rolesToList(loggedInUser.getRoles()));
+		model.addAttribute("categories", userService.findUserCategoriesInnerJoin(loggedInUser.getId()));
+//		model.addAttribute("roles", userService.rolesToList(loggedInUser.getRoles()));
 		
 		Ticket selectedTicket = ticketService.findInAllowedTickets(loggedInUser, ticketService.idToLong(ticketId));
 		if (selectedTicket == null) {
@@ -160,17 +194,16 @@ public class HomeController {
 			model.addAttribute("allMessages", messageService.getMessages(selectedTicket));
 		}
 		
-		
-		if (selectedRole != null) {
-			userService.switchLastSelectedRole(loggedInUser, selectedRole);
-		}
-		model.addAttribute("lastRole", loggedInUser.getLastSelectedRole());
-		
 		if (selectedCategory != null) {
-			userService.switchLastTicketCategory(loggedInUser, selectedCategory);
+			userService.switchSelectedCategory(loggedInUser, selectedCategory);
+		}
+		model.addAttribute("lastCategory", loggedInUser.getSelectedCategory());
+		
+		if (selectedStatus != null) {
+			userService.switchSelectedStatus(loggedInUser, selectedStatus);
 		}
 		model.addAttribute("tickets", ticketService.categorySelector(loggedInUser));
-		model.addAttribute("selectedCategory", loggedInUser.getLastTicketCategory());
+		model.addAttribute("selectedStatus", loggedInUser.getSelectedStatus());
 		
 		return "incidents";
 	}
@@ -230,6 +263,18 @@ public class HomeController {
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 		model.addAttribute("ticketRequestor", loggedInUser.getFullName());
 		
+		List<Category> categories = categoryService.findAllByOrderByCategoryAsc();
+		for (Category c : categories) {
+			if (c.getCategory().equals("Saját")) {
+				categories.remove(c);
+			}
+		}
+		
+		model.addAttribute("categories", categories);
+		
+		
+		
+		
 //		System.out.println(uploadingFiles);
 //		if (uploadingFiles != null) {
 //			for(MultipartFile uploadedFile : uploadingFiles) {
@@ -245,16 +290,15 @@ public class HomeController {
 	
 	@PostMapping("/newtick")
 	public String addTicket(@ModelAttribute Ticket ticket, Authentication authentication,
-							@RequestParam(value="uploadingFiles", required=false) MultipartFile[] uploadingFiles
+							@RequestParam(value="uploadingFiles", required=false) MultipartFile[] uploadingFiles,
+							@RequestParam(value="selectedCategory", required=false) String selectedCategory
 							) {
 		
 //	public String addTicket(@ModelAttribute Ticket ticket) {
-		System.out.println("UJ TICKET");
+		Category category = categoryService.findByCategory(selectedCategory);
 		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
-		System.out.println("UserDetailsImpl: " + userDetailsImpl.getUsername());
 		User user = userService.findByEmail(userDetailsImpl.getUsername());
-		System.out.println(ticket.getSubject());
-		ticketService.addNewTicket(ticket, user);
+		ticketService.addNewTicket(ticket, user, category);
 		messageService.createNewMessage(ticket);
 		
 
@@ -280,6 +324,15 @@ public class HomeController {
 //		
 ////		return "redirect:/newtick";
 //	}
+	
+	@RequestMapping("/profile")
+	public String profile(Model model, Authentication authentication) {
+		model.addAttribute("users", userService.findAll());
+		
+		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		model.addAttribute("loggedInUser", loggedInUser);
+		return "profile";
+	}
 	
 	@RequestMapping("/registration")
 	public String registration(Model model) {

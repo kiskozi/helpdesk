@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/main}">
+<head>
+	<title>Helpdesk kezdőlap</title>
+</head>
+<body>
+		
+	<div layout:fragment="loginContent">
+		
+		<div class="container">
+			
+			<div id="page-profile">
+
+					<div sec:authorize="hasRole('ROLE_ADMIN')" id="page-profile-userlist" class="border">
+						<p>Felhasználók</p>
+
+						<input type="text" id="search" class="lcPanel lcTextbox lcBordered" onkeyup="searchBar()" placeholder="Keresés..." autocomplete="off">
+
+						<div class="scroll">
+						<ul id="userList">
+							
+							<li th:each="user : ${users}">
+								<a class="lcLink" href="#" th:utext="${user.fullName} + '&lt;br/&gt;(' + ${user.email} + ')'">
+									Admin<br/>(admin@helpdesk.hu)
+								</a>
+							</li>
+						</ul>
+						</div>
+
+					</div>
+				
+					<div id="page-profile-data" class="border">
+
+						<p>Adatok szerkesztése</p>
+
+						<div>
+							<label>Teljes név: </label>
+							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.fullName}"/>
+						</div>
+
+						<div>
+							<label>E-mail cím: </label>
+							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.email}"/>
+						</div>
+
+						<div>
+							<label>Cím: </label>
+							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.address}"/>
+						</div>
+
+						<div>
+							<label>Telefonszám: </label>
+							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.phoneNumber}"/>
+						</div>
+						
+						<p sec:authorize="hasRole('ROLE_ADMIN')">Jogosultságok szerkesztése</p>
+						
+						<div sec:authorize="hasRole('ROLE_ADMIN')" id="editRoles">
+							
+							<div id="editRoles-right">
+								
+								<label>Hozzáadható: </label>
+								
+								<div id="addRoles">
+									
+									<div class="rolesList scroll">
+										
+										<ul>
+										<li onclick="markerEvent(this)">Admin</li>
+										<li onclick="markerEvent(this)">Bejelentő</li>
+										<li onclick="markerEvent(this)">Megoldó</li>
+										<li onclick="markerEvent(this)">Tűzfal</li>
+										<li onclick="markerEvent(this)">Telefon</li>
+										<li onclick="markerEvent(this)">Support</li>
+										<li onclick="markerEvent(this)">Hardver</li>
+										</ul>
+									</div>
+                        		</div>
+								
+                        	</div>
+							
+							<div id="editRoles-center">
+								<div id="rolesButtons">
+
+									<button class="lcButton lcPanel">&gt&gt</button>
+
+									<button class="lcButton lcPanel">&gt</button>
+
+									<button class="lcButton lcPanel">&lt</button>
+
+									<button class="lcButton lcPanel">&lt&lt</button>
+
+								</div>
+							</div>
+							
+							<div id="editRoles-left">
+								
+								<label>Meglévő: </label>
+								
+								<div id="availableRoles">
+									
+									<div class="rolesList scroll">
+										
+										<ul>
+										<li onclick="markerEvent(this)">Weblap</li>
+										<li onclick="markerEvent(this)">Hálózat</li>
+										<li onclick="markerEvent(this)">Program</li>
+										</ul>
+									</div>
+										
+                        		</div>
+								
+                        	</div>
+							
+                        </div>
+
+						<p>Jelszó módosítása</p>
+
+						<div>
+							<label>Régi jelszó: </label>
+							<input class="lcPanel lcTextbox lcBordered" type="password" value="Abcd1234"/>
+						</div>
+
+						<div>
+							<label>Új jelszó: </label>
+							<input class="lcPanel lcTextbox lcBordered" type="password" value="Abcd1234"/>
+						</div>
+
+						<div>
+							<label>Jelszó megerősítése: </label>
+							<input class="lcPanel lcTextbox lcBordered" type="password" value="Abcd1234"/>
+						</div>
+
+						<p></p>
+
+						<div>
+							<button class="lcButton lcPanel" type="submit">Mentés</button>
+						</div>
+
+					</div>
+
+				
+			
+			</div>
+			
+		</div>
+		
+		<script src="/scripts/script.js"></script>			
+	</div>
+		
+		
+	</body>
+</html>

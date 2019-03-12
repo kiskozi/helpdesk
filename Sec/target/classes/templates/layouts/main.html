@@ -19,7 +19,7 @@
 				<span id="loginname" sec:authentication="name"></span>
 				<ul>
 					<a class="menu-link" href="/"><li>Hibajegyek</li></a>
-					<a class="menu-link" href="#"><li>Profilom</li></a>
+					<a class="menu-link" href="/profile"><li>Profil</li></a>
 					<a class="menu-link" href="#"><li>Kontaktok</li></a>
 					<form id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
 						<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;"><li>Kijelentkezés</li></a>

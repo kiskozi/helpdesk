@@ -2,9 +2,11 @@ package com.sec.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.sec.entity.Category;
 import com.sec.entity.Ticket;
 import com.sec.entity.User;
 
@@ -23,6 +25,12 @@ public interface TicketService {
 	
 	List<Ticket> findBySolver(String solver);
 	
+	List<Ticket> findByStatusAndCategory(String status, Category selectedCategory);
+	
+	List<Ticket> findBySolverAndStatusAndCategory(String solver, String status, Category selectedCategory);
+	
+	Set<Ticket> findByRequestorOrSolverOrSolverIsNullAndCategoryIn(User requestor, String solver, List<Category> categories);
+	
 	List<Ticket> categorySelector(User user);
 	
 //	List<Ticket> categorySelector(String selectedCategory);
@@ -31,7 +39,7 @@ public interface TicketService {
 
 	Optional<Ticket> findById(Long id);
 
-	String addNewTicket(Ticket ticket, User user);
+	String addNewTicket(Ticket ticket, User user, Category category);
 
 	Long idToLong(String ticketId);
 

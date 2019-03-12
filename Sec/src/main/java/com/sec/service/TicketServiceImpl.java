@@ -2,28 +2,44 @@ package com.sec.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sec.entity.Category;
+import com.sec.entity.Role;
 import com.sec.entity.Ticket;
 import com.sec.entity.User;
+import com.sec.repo.CategoryRepository;
+import com.sec.repo.RoleRepository;
 import com.sec.repo.TicketRepository;
+import com.sec.repo.UserRepository;
 
 @Service
 public class TicketServiceImpl implements TicketService {
 
 	private TicketRepository ticketRepository;
+	private UserRepository userRepository;
+	private RoleRepository roleRepository;
+	private CategoryRepository categoryRepository;
 	
 	private final String TICKET_STATUS_WAITING = "Megoldóra vár";
 	private final String TICKET_STATUS_IN_PROGRESS = "Folyamatban";
 	private final String TICKET_STATUS_CLOSED = "Lezárt";
 	
 	@Autowired
-	public TicketServiceImpl(TicketRepository ticketRepository) {
+	public TicketServiceImpl(TicketRepository ticketRepository,
+							UserRepository userRepository,
+							RoleRepository roleRepository,
+							CategoryRepository categoryRepository) {
 		this.ticketRepository = ticketRepository;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.categoryRepository = categoryRepository;
 	}
 	
 	@Override
@@ -55,52 +71,80 @@ public class TicketServiceImpl implements TicketService {
 	public List<Ticket> findBySolver(String solver){
 		return ticketRepository.findBySolver(solver);
 	}
+	
+	@Override
+	public List<Ticket> findByStatusAndCategory(String status, Category selectedCategory){
+		return ticketRepository.findByStatusAndCategory(status, selectedCategory);
+	}
+	
+	@Override
+	public List<Ticket> findBySolverAndStatusAndCategory(String solver, String status, Category selectedCategory) {
+		return ticketRepository.findBySolverAndStatusAndCategory(solver, status, selectedCategory);
+	}
+	
+	@Override
+	public Set<Ticket> findByRequestorOrSolverOrSolverIsNullAndCategoryIn(User requestor, String solver, List<Category> categories) {
+		return ticketRepository.findByRequestorOrSolverOrSolverIsNullAndCategoryIn(requestor, solver, categories);
+	}
 
 	@Override
 	public List<Ticket> categorySelector(User user) {
 		
 		List<Ticket> tickets = new ArrayList<>();
-		
-		switch (user.getLastSelectedRole()) {
-		case "Bejelentő":
-			tickets = findByRequestorAndStatus(user, user.getLastTicketCategory());
-			break;
-		case "Megoldó":
-			if (user.getLastTicketCategory().equals(TICKET_STATUS_WAITING)) {
-				tickets = findBySolverAndStatus(null , user.getLastTicketCategory());
+		Set<Role> userRoles = userRepository.findUserRolesInnerJoin(user.getId());
+		if (user.getSelectedCategory() != null) {
+			if (user.getSelectedCategory().equals("Saját")) {
+				tickets = findByRequestorAndStatus(user, user.getSelectedStatus());
+			} else if (userRoles.contains(roleRepository.findByRole("ADMIN"))) {
+				tickets = findByStatusAndCategory(
+						user.getSelectedStatus(),
+						categoryRepository.findByCategory(user.getSelectedCategory())
+						);
 			} else {
-				tickets = findBySolverAndStatus(user.getFullName(), user.getLastTicketCategory());
+				tickets = findBySolverAndStatusAndCategory(
+					user.getSelectedStatus().equals(TICKET_STATUS_WAITING) ? null : user.getFullName(),
+					user.getSelectedStatus(),
+					categoryRepository.findByCategory(user.getSelectedCategory())
+					);
 			}
-			break;
-		case "Adminisztrátor":
-			tickets = findByStatus(user.getLastTicketCategory());
-			break;
-		default:
-    		System.out.println("nincs kiválasztva");
-    		break;
 		}
+//		switch (user.getLastSelectedRole()) {
+//		case "Bejelentő":
+//			tickets = findByRequestorAndStatus(user, user.getSelectedStatus());
+//			break;
+//		case "Megoldó":
+//			if (user.getSelectedStatus().equals(TICKET_STATUS_WAITING)) {
+//				tickets = findBySolverAndStatus(null , user.getSelectedStatus());
+//			} else {
+//				tickets = findBySolverAndStatus(user.getFullName(), user.getSelectedStatus());
+//			}
+//			break;
+//		case "Adminisztrátor":
+//			tickets = findByStatus(user.getSelectedStatus());
+//			break;
+//		default:
+//    		System.out.println("nincs kiválasztva");
+//    		break;
+//		}
 		return tickets;
 	}
 	
 	@Override
 	public Ticket findInAllowedTickets(User user, Long id) {
+
+		Set<Ticket> tickets = new HashSet<Ticket>();
 		
-		List<Ticket> tickets = new ArrayList<>();
+		Set<Role> userRoles = userRepository.findUserRolesInnerJoin(user.getId());
 		
-		switch (user.getLastSelectedRole()) {
-		case "Bejelentő":
-			tickets = findByRequestor(user);
-			break;
-		case "Megoldó":
-			tickets = findBySolver(null);
-			tickets.addAll(findBySolver(user.getFullName()));
-			break;
-		case "Adminisztrátor":
-			tickets = findAll();
-			break;
-		default:
-    		System.out.println("nincs kiválasztva");
-    		break;
+		if (userRoles.contains(roleRepository.findByRole("ADMIN"))) {
+			tickets.addAll(findAll());
+		} else if (userRoles.contains(roleRepository.findByRole("SOLVER"))) {
+			tickets.addAll(findByRequestorOrSolverOrSolverIsNullAndCategoryIn(
+					user,
+					user.getFullName(),
+					userRepository.findUserCategoriesInnerJoin(user.getId())));
+		} else if (userRoles.contains(roleRepository.findByRole("USER"))) {
+			tickets.addAll(findByRequestor(user));
 		}
 		for (Ticket ticket : tickets) {
 			if (ticket.getId() == id) return ticket;
@@ -125,10 +169,11 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public String addNewTicket(Ticket ticket, User user) {
+	public String addNewTicket(Ticket ticket, User user, Category category) {
 		ticket.setRequestor(user);
 		ticket.setCreated(new Date());
 		ticket.setStatus(TICKET_STATUS_WAITING);
+		ticket.setCategory(category);
 		ticketRepository.save(ticket);
 		return null;
 	}

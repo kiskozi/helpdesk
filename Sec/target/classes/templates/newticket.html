@@ -15,6 +15,15 @@
 					<label class="prLabel">Bejelentő: <span class="prLabel-span" th:text="${ticketRequestor}">Admin</span></label>
 <!-- 					<input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" th:text="|Bejelentő: ${ticketRequestor}|"></input> -->
 					
+					<div>
+						
+						Kategória: 
+						<select name="selectedCategory" >
+			 				<option th:each="category : ${categories}" th:value="${category.category}" th:text="${category.category}" ></option>
+						</select>
+						
+					</div>
+					
 					<label class="prLabel tcLabel">Bejelentés megnevezése: </label>
 					<input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" th:field="*{subject}" placeholder="A hiba rövid leírása" required="true"></input>
 					
