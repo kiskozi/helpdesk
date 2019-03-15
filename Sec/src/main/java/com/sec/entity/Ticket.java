@@ -29,6 +29,7 @@ public class Ticket {
 	private String subject;
 	
 	@Column(columnDefinition = "TEXT")
+//	@Column(length = 1000)
 	private String description;
 	
 	private Date created;

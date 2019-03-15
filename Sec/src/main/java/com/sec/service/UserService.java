@@ -30,5 +30,7 @@ public interface UserService {
 	Set<Role> findUserRolesInnerJoin(Long loggedInUserId);
 	
 	List<Category> findUserCategoriesInnerJoin(Long loggedInUserId);
+
+	String editUser(User loggedInUser,String newName,String newEmail,String newAddress,String newPhoneNumber);
 	
 }

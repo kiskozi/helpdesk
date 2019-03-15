@@ -49,7 +49,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter{
 				.antMatchers( "/registration").permitAll()
 				.antMatchers( "/activation/**").permitAll()
 				.antMatchers( "/login").permitAll()
-				.antMatchers( "/db/**").permitAll()		//H2 console megjelenítéséhez
+//				.antMatchers( "/db/**").permitAll()		//H2 console megjelenítéséhez
 				.antMatchers( "/css/**").permitAll()
 				.antMatchers( "/scripts/**").permitAll()
 				.antMatchers("/admin/**").hasRole("ADMIN")
@@ -70,8 +70,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter{
 				.permitAll();
 		
 //		H2 console megjelenítéséhez
-		httpSec.headers().frameOptions().disable();
-		httpSec.csrf().disable();
+//		httpSec.headers().frameOptions().disable();
+//		httpSec.csrf().disable();
 		}
 	
 }

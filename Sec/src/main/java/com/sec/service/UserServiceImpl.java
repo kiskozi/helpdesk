@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	private CategoryRepository categoryRepository;
 	
-	private EmailService emailService;
+//	private EmailService emailService;
 	
 	private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.categoryRepository = categoryRepository;
-		this.emailService = emailService;
+//		this.emailService = emailService;
 	}
 	
 	@Override
@@ -136,6 +136,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return "activationsuccess";
 	}
 
+	@Override
+	public String editUser(User loggedInUser,String newName,String newEmail,String newAddress,String newPhoneNumber) {
+		User oldUser = userRepository.findByEmail(loggedInUser.getEmail());
+		User newUser = userRepository.findByEmail(newEmail);
+		boolean emailChanged = !oldUser.equals(newUser);
+		if (emailChanged) {
+			if (newUser != null) {
+				return "alreadyExists";
+			}
+		}
+		loggedInUser.setFullName(newName);
+		loggedInUser.setEmail(newEmail);
+		loggedInUser.setAddress(newAddress);
+		loggedInUser.setPhoneNumber(newPhoneNumber);
+		userRepository.save(loggedInUser);
+		return emailChanged ? "emailChanged" : "ok";
+	}
+	
 	@Override
 	public void switchSelectedStatus(User loggedInUser, String SelectedStatus) {
 		loggedInUser.setSelectedStatus(SelectedStatus);

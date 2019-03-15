@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.sec.entity.Role;
 import com.sec.entity.User;
 
+
+@SuppressWarnings("serial")		//eltűnteti a figyelmeztetést, hogy nincs id változója.
 public class UserDetailsImpl implements UserDetails {
 
 	private User user;

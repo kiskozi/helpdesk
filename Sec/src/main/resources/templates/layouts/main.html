@@ -7,14 +7,14 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<title>Helpdesk</title>
+		<title>We'll Solve It</title>
 		<link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}" >
 	</head>
 	
 	<body>
 		
 		<div id="page-top" class="flex-container">
-			<div id="page-top-left" class="logo">HelpDesk</div>
+			<div id="page-top-left" class="logo"><a class="menu-link" href="/">We'll Solve It</a></div>
 			<div sec:authorize="isAuthenticated()" id="page-top-right" class="menu">
 				<span id="loginname" sec:authentication="name"></span>
 				<ul>

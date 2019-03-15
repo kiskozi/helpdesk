@@ -30,28 +30,30 @@
 
 					</div>
 				
+					<form id="editUser" name="editUser" th:action="@{/prof}" method="post"></form>
+				
 					<div id="page-profile-data" class="border">
 
 						<p>Adatok szerkesztése</p>
 
 						<div>
 							<label>Teljes név: </label>
-							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.fullName}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newName" th:value="${loggedInUser.fullName}"/>
 						</div>
 
 						<div>
 							<label>E-mail cím: </label>
-							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.email}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newEmail" th:value="${loggedInUser.email}"/>
 						</div>
 
 						<div>
 							<label>Cím: </label>
-							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.address}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newAddress" th:value="${loggedInUser.address}"/>
 						</div>
 
 						<div>
 							<label>Telefonszám: </label>
-							<input class="lcPanel lcTextbox lcBordered" th:value="${loggedInUser.phoneNumber}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newPhoneNumber" th:value="${loggedInUser.phoneNumber}"/>
 						</div>
 						
 						<p sec:authorize="hasRole('ROLE_ADMIN')">Jogosultságok szerkesztése</p>
@@ -135,7 +137,7 @@
 						<p></p>
 
 						<div>
-							<button class="lcButton lcPanel" type="submit">Mentés</button>
+							<button form="editUser" class="lcButton lcPanel" type="submit">Mentés</button>
 						</div>
 
 					</div>

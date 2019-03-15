@@ -1,11 +1,9 @@
 package com.sec.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 //import javax.servlet.http.HttpServletRequest;
@@ -15,6 +13,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 //import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,11 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sec.entity.Attachment;
 import com.sec.entity.Category;
-import com.sec.entity.Role;
 import com.sec.entity.Ticket;
 import com.sec.entity.User;
 import com.sec.repo.RoleRepository;
-import com.sec.repo.UserRepository;
 import com.sec.service.AttachmentService;
 import com.sec.service.CategoryService;
 import com.sec.service.MessageService;
@@ -55,8 +53,6 @@ public class HomeController {
 	private AttachmentService attachmentService;
 	private MessageService messageService;
 	private CategoryService categoryService;
-
-	private RoleRepository roleRepository;
 	
 //	@Autowired
 //	public void setJavaMailSender(EmailService emailService) {
@@ -77,8 +73,6 @@ public class HomeController {
 		this.attachmentService = attachmentService;
 		this.messageService = messageService;
 		this.categoryService = categoryService;
-
-		this.roleRepository = roleRepository;
 	}
 	
 	private UserValidator userValidator;
@@ -334,6 +328,23 @@ public class HomeController {
 		return "profile";
 	}
 	
+	@PostMapping("/prof")
+	public String editProfile(Authentication authentication, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value="newName", required=false) String newName,
+			@RequestParam(value="newEmail", required=false) String newEmail,
+			@RequestParam(value="newAddress", required=false) String newAddress,
+			@RequestParam(value="newPhoneNumber", required=false) String newPhoneNumber
+			) {
+		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		String editProfileStatus = userService.editUser(loggedInUser, newName, newEmail, newAddress, newPhoneNumber);
+		if (editProfileStatus.equals("emailChanged")) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+			return "redirect:/login?logout";
+		}
+		return "redirect:/profile";
+	}
+	
 	@RequestMapping("/registration")
 	public String registration(Model model) {
 		model.addAttribute("user", new User());
@@ -359,9 +370,6 @@ public class HomeController {
 		return "redirect:/login?regsuccess";
 	}
 	
-	
-	
-	
 //	@RequestMapping(value = "/activation/{code}", method = RequestMethod.GET)
 	@GetMapping(value = "/activation/{code}")
 	public String activation(@PathVariable("code") String code, HttpServletResponse response) {
@@ -369,8 +377,6 @@ public class HomeController {
 //		return "auth/login";
 		return "redirect:/login?" + userAct;
 	}
-	
-	
 	
 //	@Secured("ROLE_ADMIN")
 //	@RequestMapping("/delete")
