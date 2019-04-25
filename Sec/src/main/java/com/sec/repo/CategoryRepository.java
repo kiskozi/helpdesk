@@ -8,6 +8,8 @@ import com.sec.entity.Category;
 
 public interface CategoryRepository extends CrudRepository<Category, Long> {
 	
+	List<Category> findAll();
+	
 	List<Category> findAllByOrderByCategoryAsc();
 	
 	Category findByCategory(String category);

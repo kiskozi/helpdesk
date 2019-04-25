@@ -19,8 +19,10 @@
 				<span id="loginname" sec:authentication="name"></span>
 				<ul>
 					<a class="menu-link" href="/"><li>Hibajegyek</li></a>
-					<a class="menu-link" href="/profile"><li>Profil</li></a>
-					<a class="menu-link" href="#"><li>Kontaktok</li></a>
+					<a class="menu-link" href="/profile" sec:authorize="!hasRole('ROLE_ADMIN')"><li>Profil</li></a>
+					<a class="menu-link" href="/userprofile" sec:authorize="hasRole('ROLE_ADMIN')"><li>Felhasználói profilok</li></a>
+					<a class="menu-link" href="/categories" sec:authorize="hasRole('ROLE_ADMIN')"><li>Kategóriák szerkeztése</li></a>
+					<a class="menu-link" href="/users"><li>Kontaktok</li></a>
 					<form id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
 						<a id="logout" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;"><li>Kijelentkezés</li></a>
 					</form>

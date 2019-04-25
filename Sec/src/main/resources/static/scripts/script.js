@@ -28,3 +28,34 @@ function searchBar() {
     }
   }
 }
+
+function changeChecked() {
+	if (document.getElementById("editOthers") == null) return;
+	var disableUserCheckBox = document.getElementById("disableUser");
+	var adminRoleCheckBox = document.getElementById("adminRole");
+	if (disableUserCheckBox.value == "true") {
+		disableUserCheckBox.checked = true;
+	} else if (disableUserCheckBox.value == "false") {
+		disableUserCheckBox.checked = false;
+	}
+	if (adminRoleCheckBox.value == "true") {
+		adminRoleCheckBox.checked = true;
+	} else if (adminRoleCheckBox.value == "false") {
+		adminRoleCheckBox.checked = false;
+	}
+	return;
+}
+
+function enableDisable() {
+	if(document.getElementById("disableUser").checked)
+	    document.getElementById("disableUserHidden").disabled = true;
+	document.getElementById("disableUserForm").submit();
+	return;
+}
+
+function changeAdminRole() {
+	if(document.getElementById("adminRole").checked)
+	    document.getElementById("adminRoleHidden").disabled = true;
+	document.getElementById("adminRoleForm").submit();
+	return;
+}

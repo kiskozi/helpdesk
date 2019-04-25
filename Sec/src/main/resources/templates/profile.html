@@ -4,24 +4,26 @@
 <head>
 	<title>Helpdesk kezdőlap</title>
 </head>
-<body>
+<body onload="changeChecked()">
 		
 	<div layout:fragment="loginContent">
 		
 		<div class="container">
 			
-			<div id="page-profile">
+<!-- 			<div id="page-profile"> -->
 
-					<div sec:authorize="hasRole('ROLE_ADMIN')" id="page-profile-userlist" class="border">
-						<p>Felhasználók</p>
+			<div class="pageContent650">
+
+					<div sec:authorize="hasRole('ROLE_ADMIN')" th:if="${not #lists.isEmpty(users)}" id="page-profile-userlist" class="border">
+						<p class="underLineP">Felhasználók</p>
 
 						<input type="text" id="search" class="lcPanel lcTextbox lcBordered" onkeyup="searchBar()" placeholder="Keresés..." autocomplete="off">
 
-						<div class="scroll">
+						<div class="scroll page-left-list">
 						<ul id="userList">
 							
 							<li th:each="user : ${users}">
-								<a class="lcLink" href="#" th:utext="${user.fullName} + '&lt;br/&gt;(' + ${user.email} + ')'">
+								<a class="lcLink" th:href="@{/userprofile(id=${user.id})}" th:utext="${user.fullName} + '&lt;br/&gt;(' + ${user.email} + ')'">
 									Admin<br/>(admin@helpdesk.hu)
 								</a>
 							</li>
@@ -30,114 +32,125 @@
 
 					</div>
 				
-					<form id="editUser" name="editUser" th:action="@{/prof}" method="post"></form>
-				
+					<form sec:authorize="!hasRole('ROLE_ADMIN')" id="editUser" name="editUser" th:action="@{/prof}" method="post"></form>
+					<form sec:authorize="hasRole('ROLE_ADMIN')" id="editUser" name="editUser" th:action="@{/userprof} + '?id=' + ${selectedUser?.id}" method="post"></form>
+					<form sec:authorize="!hasRole('ROLE_ADMIN')" id="changePass" name="changePass" th:action="@{/changepass}" method="post"></form>
+					<form sec:authorize="hasRole('ROLE_ADMIN')" id="changePass" name="changePass" th:action="@{/changeuserpass} + '?id=' + ${selectedUser?.id}" method="post"></form>
+					
 					<div id="page-profile-data" class="border">
 
-						<p>Adatok szerkesztése</p>
+						<p class="underLineP">Adatok szerkesztése</p>
 
 						<div>
 							<label>Teljes név: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newName" th:value="${loggedInUser.fullName}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newName" th:value="${selectedUser.fullName}"/>
 						</div>
 
 						<div>
 							<label>E-mail cím: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newEmail" th:value="${loggedInUser.email}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newEmail" th:value="${selectedUser.email}"/>
 						</div>
 
 						<div>
 							<label>Cím: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newAddress" th:value="${loggedInUser.address}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newAddress" th:value="${selectedUser.address}"/>
 						</div>
 
 						<div>
 							<label>Telefonszám: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newPhoneNumber" th:value="${loggedInUser.phoneNumber}"/>
+							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newPhoneNumber" th:value="${selectedUser.phoneNumber}"/>
 						</div>
-						
-						<p sec:authorize="hasRole('ROLE_ADMIN')">Jogosultságok szerkesztése</p>
-						
-						<div sec:authorize="hasRole('ROLE_ADMIN')" id="editRoles">
-							
-							<div id="editRoles-right">
-								
-								<label>Hozzáadható: </label>
-								
-								<div id="addRoles">
-									
-									<div class="rolesList scroll">
-										
-										<ul>
-										<li onclick="markerEvent(this)">Admin</li>
-										<li onclick="markerEvent(this)">Bejelentő</li>
-										<li onclick="markerEvent(this)">Megoldó</li>
-										<li onclick="markerEvent(this)">Tűzfal</li>
-										<li onclick="markerEvent(this)">Telefon</li>
-										<li onclick="markerEvent(this)">Support</li>
-										<li onclick="markerEvent(this)">Hardver</li>
-										</ul>
-									</div>
-                        		</div>
-								
-                        	</div>
-							
-							<div id="editRoles-center">
-								<div id="rolesButtons">
-
-									<button class="lcButton lcPanel">&gt&gt</button>
-
-									<button class="lcButton lcPanel">&gt</button>
-
-									<button class="lcButton lcPanel">&lt</button>
-
-									<button class="lcButton lcPanel">&lt&lt</button>
-
-								</div>
-							</div>
-							
-							<div id="editRoles-left">
-								
-								<label>Meglévő: </label>
-								
-								<div id="availableRoles">
-									
-									<div class="rolesList scroll">
-										
-										<ul>
-										<li onclick="markerEvent(this)">Weblap</li>
-										<li onclick="markerEvent(this)">Hálózat</li>
-										<li onclick="markerEvent(this)">Program</li>
-										</ul>
-									</div>
-										
-                        		</div>
-								
-                        	</div>
-							
-                        </div>
-
-						<p>Jelszó módosítása</p>
 
 						<div>
+							<button form="editUser" class="lcButton lcPanel" type="submit">Változtatások mentése</button>
+						</div>
+						
+						<p sec:authorize="hasRole('ROLE_ADMIN')" class="underLineP">Jogosultságok szerkesztése</p>
+						
+						<div sec:authorize="hasRole('ROLE_ADMIN')">
+							<div id="editRoles">
+							
+								<form id="editcategories" name="editcategories" th:action="@{/userprofile} + '?id=' + ${selectedUser?.id}" method="post"></form>
+								
+								<div id="editRoles-left">
+									
+									<label>Hozzáadható: </label>
+									
+									<div id="addRoles">
+										
+										<div class="height90 rolesList scroll">
+
+											<input th:each="category : ${categoriesToAdd}" form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" th:value="${category.category}"/>
+												
+										</div>
+	                        		</div>
+									
+	                        	</div>
+								
+								<div id="editRoles-right">
+									
+									<label>Meglévő: </label>
+									
+									<div id="availableRoles">
+										
+										<div class="height90 rolesList scroll">
+
+											<input th:each="category : ${addedCategories}" form="editcategories" class="editRoleItems" type="submit" name="categoryToRemove" th:value="${category.category}"/>
+											
+										</div>
+											
+	                        		</div>
+									
+	                        	</div>
+								
+	                        </div>
+						</div>
+						
+						<div sec:authorize="hasRole('ROLE_ADMIN')">
+							
+							<form id="adminRoleForm" name="adminRoleForm" th:action="@{/userprofile} + '?id=' + ${selectedUser?.id}" method="post" type='hidden' ></form>
+							<form id="disableUserForm" name="disableUserForm" th:action="@{/userprofile} + '?id=' + ${selectedUser?.id}" method="post" type='hidden' ></form>
+							
+							<div id="editOthers">
+										
+								<div class="lcCheckbox lcPanel">
+									<label>Admin jog: </label>
+									<input form="adminRoleForm" type='hidden' id="adminRoleHidden" name="adminRole" th:value="${userIsAdmin}">
+									<input form="adminRoleForm" onclick="changeAdminRole()" type="checkbox" id="adminRole" name="adminRole" th:value="${userIsAdmin}">
+								</div>
+								
+								<div class="lcCheckbox lcPanel">
+									<label>Felhasználó tiltása: </label>
+<!-- 									<input form="disableUserForm" onclick="enableDisable()" checked type="checkbox" id="disableUser" name="disableUser" th:value="${b}"/> -->
+									<input form="disableUserForm" type='hidden' id="disableUserHidden" name="disableUser" th:value="${!selectedUser.enabled}">
+  									<input form="disableUserForm" onclick="enableDisable()" type="checkbox" id="disableUser" name="disableUser" th:value="${!selectedUser.enabled}">
+								</div>
+									
+							</div>
+							
+						</div>
+						
+						<p class="underLineP">Jelszó módosítása</p>
+
+						<div sec:authorize="!hasRole('ROLE_ADMIN')">
 							<label>Régi jelszó: </label>
-							<input class="lcPanel lcTextbox lcBordered" type="password" value="Abcd1234"/>
+							<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="oldPassword"/>
 						</div>
 
 						<div>
 							<label>Új jelszó: </label>
-							<input class="lcPanel lcTextbox lcBordered" type="password" value="Abcd1234"/>
+							<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="newPassword"/>
 						</div>
 
 						<div>
 							<label>Jelszó megerősítése: </label>
-							<input class="lcPanel lcTextbox lcBordered" type="password" value="Abcd1234"/>
+							<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="confirmPassword"/>
 						</div>
-
-						<p></p>
+						
+						<span th:text="${passwordChanged}"></span>
 
 						<div>
-							<button form="editUser" class="lcButton lcPanel" type="submit">Mentés</button>
+							<button form="changePass" class="lcButton lcPanel" type="submit">Új jelszó mentése</button>
 						</div>
 
 					</div>

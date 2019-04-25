@@ -2,6 +2,7 @@ package com.sec.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 //import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -28,11 +28,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.sec.entity.Attachment;
 import com.sec.entity.Category;
+import com.sec.entity.Role;
 import com.sec.entity.Ticket;
 import com.sec.entity.User;
+import com.sec.repo.CategoryRepository;
 import com.sec.repo.RoleRepository;
 import com.sec.service.AttachmentService;
 import com.sec.service.CategoryService;
@@ -65,8 +69,8 @@ public class HomeController {
 								TicketService ticketService,
 								AttachmentService attachmentService,
 								MessageService messageService,
-								CategoryService categoryService,
-								RoleRepository roleRepository) {
+								CategoryService categoryService
+								) {
 		
 		this.userService = userService;
 		this.ticketService = ticketService;
@@ -313,36 +317,155 @@ public class HomeController {
 //	@ResponseBody
 //	public void attachFile(Model model,
 //						   @RequestParam(value="uploadingFiles", required=false) MultipartFile[] uploadingFiles) {
-//		
-//		
-//		
-////		return "redirect:/newtick";
+//		return "redirect:/newtick";
 //	}
+	
+	@RequestMapping("/userprofile")
+	public String userprofile(
+								Model model,
+								Authentication authentication,
+//								@ModelAttribute("passwordChanged") String passwordChanged,
+								@RequestParam(value="id", required=false) String userId,
+								@RequestParam(value="categoryToAdd", required=false) String categoryToAdd,
+								@RequestParam(value="categoryToRemove", required=false) String categoryToRemove,
+								@RequestParam(value="roleToAdd", required=false) String roleToAdd,
+								@RequestParam(value="roleToRemove", required=false) String roleToRemove,
+								@RequestParam(value="disableUser", required=false) String disableUser,
+								@RequestParam(value="adminRole", required=false) String adminRole
+								) {
+		model.addAttribute("users", userService.findAllByOrderByFullNameAsc());
+		
+		Optional<User> findUser = userService.findById(userService.idToLong(userId));
+		
+		User selectedUser = findUser.isPresent() ? findUser.get() : userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		
+		if (categoryToAdd != null) userService.addCategoryToUserCategories(selectedUser, categoryToAdd);
+		if (categoryToRemove != null) userService.removeCategoryFromUserCategories(selectedUser, categoryToRemove);
+		
+//		if (roleToAdd != null) userService.addRoleToUserRoles(selectedUser, roleToAdd);
+//		if (roleToRemove != null) userService.removeRoleFromUserRoles(selectedUser, roleToRemove);
+		
+		if (disableUser != null) userService.disableUser(selectedUser, disableUser);
+		
+		if (adminRole != null) userService.changeAdminRole(selectedUser, adminRole);
+		
+		model.addAttribute("selectedUser", selectedUser);
+		
+		model.addAttribute("categoriesToAdd", userService.findUserPossibleCategories(selectedUser.getId()));
+		
+		List<Category> addedCategories = userService.findUserCategoriesInnerJoin(selectedUser.getId());
+		addedCategories.remove(categoryService.findByCategory("Saját"));
+		model.addAttribute("addedCategories", addedCategories);
+		
+//		model.addAttribute("rolesToAdd", userService.findUserPossibleRoles(selectedUser.getId()));
+//		model.addAttribute("addedRoles", userService.findUserRolesInnerJoin(selectedUser.getId()));
+		
+		model.addAttribute("userIsAdmin", userService.userIsAdmin(selectedUser));
+		
+//		for (Role r : selectedUser.getRoles() ) {
+//			System.out.println(r.getRole());
+//		}
+		
+		
+//		model.addAttribute("passwordChanged", passwordChanged);
+		return "profile";
+	}
+	
+	@PostMapping("/userprof")
+	public String editUserProfile(Authentication authentication, HttpServletRequest request, HttpServletResponse response, User selectedUser,
+			@RequestParam(value="newName", required=false) String newName,
+			@RequestParam(value="newEmail", required=false) String newEmail,
+			@RequestParam(value="newAddress", required=false) String newAddress,
+			@RequestParam(value="newPhoneNumber", required=false) String newPhoneNumber,
+			@RequestParam(value="id", required=false) String userId
+			) {
+		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		Optional<User> findUser = userService.findById(userService.idToLong(userId));
+		if (findUser.isPresent()) {
+			selectedUser = findUser.get();
+		} else {
+			selectedUser = loggedInUser;
+		}
+		String editProfileStatus = userService.editUser(selectedUser, newName, newEmail, newAddress, newPhoneNumber);
+		if (editProfileStatus.equals("emailChanged") && loggedInUser.equals(selectedUser)) {
+			new SecurityContextLogoutHandler().logout(request, response, authentication);
+			return "redirect:/login?logout";
+		}
+		return "redirect:/userprofile?id=" + userId;
+	}
 	
 	@RequestMapping("/profile")
 	public String profile(Model model, Authentication authentication) {
-		model.addAttribute("users", userService.findAll());
-		
-		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
-		model.addAttribute("loggedInUser", loggedInUser);
+		User selectedUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		model.addAttribute("selectedUser", selectedUser);
 		return "profile";
 	}
 	
 	@PostMapping("/prof")
-	public String editProfile(Authentication authentication, HttpServletRequest request, HttpServletResponse response,
+	public String editProfile(
+			Authentication authentication, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value="newName", required=false) String newName,
 			@RequestParam(value="newEmail", required=false) String newEmail,
 			@RequestParam(value="newAddress", required=false) String newAddress,
 			@RequestParam(value="newPhoneNumber", required=false) String newPhoneNumber
 			) {
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		
 		String editProfileStatus = userService.editUser(loggedInUser, newName, newEmail, newAddress, newPhoneNumber);
 		if (editProfileStatus.equals("emailChanged")) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			new SecurityContextLogoutHandler().logout(request, response, auth);
+//			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			new SecurityContextLogoutHandler().logout(request, response, authentication);
 			return "redirect:/login?logout";
 		}
 		return "redirect:/profile";
+	}
+	
+	@PostMapping("/changeuserpass")
+//	public String changeUserPassword(
+	public RedirectView changeUserPassword(RedirectAttributes attributes,
+			Authentication authentication,
+			User selectedUser,
+//			Model model,
+//			@RequestParam(value="oldPassword", required=false) String oldPassword,
+			@RequestParam(value="newPassword", required=false) String newPassword,
+			@RequestParam(value="confirmPassword", required=false) String confirmPassword,
+			@RequestParam(value="id", required=false) String userId
+			) {
+		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		Optional<User> findUser = userService.findById(userService.idToLong(userId));
+		if (findUser.isPresent()) {
+			selectedUser = findUser.get();
+		} else {
+			selectedUser = loggedInUser;
+		}
+		String validation = userService.changePassword(selectedUser, newPassword, confirmPassword);
+//		model.addAttribute("passwordChanged", validation);
+//		model.addAttribute("selectedUser", selectedUser);
+//		return "redirect:/userprofile?id=" + userId;
+		attributes.addFlashAttribute("passwordChanged", validation);
+//		attributes.addFlashAttribute("selectedUser", selectedUser);
+	    attributes.addAttribute("id", userId);
+		
+		return new RedirectView("userprofile");
+	}
+	
+	@PostMapping("/changepass")
+//	public String changePassword(
+	public RedirectView changePassword(RedirectAttributes attributes,
+			Authentication authentication,
+//			Model model,
+			@RequestParam(value="oldPassword", required=false) String oldPassword,
+			@RequestParam(value="newPassword", required=false) String newPassword,
+			@RequestParam(value="confirmPassword", required=false) String confirmPassword
+			) {
+		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
+		String validation = userService.changePassword(loggedInUser, oldPassword, newPassword, confirmPassword);
+//		model.addAttribute("passwordChanged", validation);
+//		model.addAttribute("selectedUser", loggedInUser);
+//		return "profile";
+		
+		attributes.addFlashAttribute("passwordChanged", validation);
+		return new RedirectView("profile");
 	}
 	
 	@RequestMapping("/registration")
@@ -383,5 +506,15 @@ public class HomeController {
 //	public String delete() {
 //		return "Delete";
 //	}
+	
+	@RequestMapping("/users")
+	public String users(Model model) {
+		return "users";
+	}
+	
+	@RequestMapping("/categories")
+	public String categories(Model model) {
+		return "categories";
+	}
 	
 }

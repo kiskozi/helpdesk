@@ -52,6 +52,9 @@ public class SecurityConf extends WebSecurityConfigurerAdapter{
 //				.antMatchers( "/db/**").permitAll()		//H2 console megjelenítéséhez
 				.antMatchers( "/css/**").permitAll()
 				.antMatchers( "/scripts/**").permitAll()
+				.antMatchers("/userprofile").hasRole("ADMIN")
+				.antMatchers("/userprof").hasRole("ADMIN")
+				.antMatchers("/changeuserpass").hasRole("ADMIN")
 				.antMatchers("/admin/**").hasRole("ADMIN")
 //				.antMatchers("/incidents").hasRole("ADMIN")
 				.anyRequest().authenticated()

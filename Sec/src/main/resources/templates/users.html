@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/main}">
+<head>
+	<title>Helpdesk kezdőlap</title>
+</head>
+<body onload="changeChecked()">
+		
+	<div layout:fragment="loginContent">
+		
+		<div class="container">
+			
+			<div class="pageContent550 width50percent">
+
+				<div class="border width100percent">
+				
+					<div class="flexRowWrap">
+					
+						<div class="b">
+					
+							<div class="a">
+								<label class="noWrap">Teljes név: </label>
+								<input class="lcPanel lcTextbox lcBordered" value="Akárki Bárki"/>
+							</div>
+
+							<div class="c"></div>
+							
+							<div class="a">
+								<label class="noWrap">E-mail cím: </label>
+								<input class="lcPanel lcTextbox lcBordered" value="akarkibarki56@gmail.com"/>
+							</div>
+							
+						</div>
+						<div class="b">
+
+							<div class="a">
+								<label class="noWrap">Cím: </label>
+								<input class="lcPanel lcTextbox lcBordered" value="1132. Budapest, Váci Út 82."/>
+							</div>
+
+							<div class="c"></div>
+
+							<div class="a">
+								<label class="noWrap">Telefonszám: </label>
+								<input class="lcPanel lcTextbox lcBordered" value="+36/20 524-8569"/>
+							</div>
+						
+						</div>
+					
+					</div>
+					
+					<div>
+					
+						<button form="editUser" class="lcButton lcPanel" type="submit">Keresés</button>
+					
+					</div>
+					
+					<div>
+					
+						<p class="underLineP"></p>
+					
+					</div>
+					
+					<div>
+					
+						<label>Találatok: </label>
+					
+					</div>
+					
+					<div class="asd">
+					
+						<table>
+							<thead>
+								<tr>
+									<th id="col1" class="noneLeftBorder">Név</th>
+									<th id="col2">E-mail cím</th>
+									<th id="col3">Cím</th>
+									<th id="col4" class="noneRightBorder">Telefonszám</th>
+								</tr>
+							</thead>
+							<tbody class=" scroll">
+								<tr>
+									<td class="noneLeftBorder">Akárki Bárki</td>
+									<td>akarkibarki56@gmail</td>
+									<td>1132. Budapest, Váci Út 82.</td>
+									<td class="noneRightBorder">+36/20 524-8569</td>
+								</tr>
+								<tr>
+									<td class="noneLeftBorder">Kajla Elemér</td>
+									<td>kajlaelemer@gmail</td>
+									<td>1834. Baja, Teleki Út 76.</td>
+									<td class="noneRightBorder">+36/30 745-6431</td>
+								</tr>
+								<tr>
+									<td class="noneLeftBorder">Sovány Gizella</td>
+									<td>sovanygizella@gmail</td>
+									<td>2356. Karcag, Deák Ferenc utca 113.</td>
+									<td class="noneRightBorder">+36/20 357-1564</td>
+								</tr>
+								<tr>
+									<td class="noneLeftBorder">Akárki Bárki</td>
+									<td>akarkibarki56@gmail</td>
+									<td>1132. Budapest, Váci Út 82.</td>
+									<td class="noneRightBorder">+36/20 524-8569</td>
+								</tr>
+								
+								
+								
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Kajla Elemér</td> -->
+									<!-- <td>kajlaelemer@gmail</td> -->
+									<!-- <td>1834. Baja, Teleki Út 76.</td> -->
+									<!-- <td class="noneRightBorder">+36/30 745-6431</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Sovány Gizella</td> -->
+									<!-- <td>sovanygizella@gmail</td> -->
+									<!-- <td>2356. Karcag, Deák Ferenc utca 113.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 357-1564</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Kajla Elemér</td> -->
+									<!-- <td>kajlaelemer@gmail</td> -->
+									<!-- <td>1834. Baja, Teleki Út 76.</td> -->
+									<!-- <td class="noneRightBorder">+36/30 745-6431</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Sovány Gizella</td> -->
+									<!-- <td>sovanygizella@gmail</td> -->
+									<!-- <td>2356. Karcag, Deák Ferenc utca 113.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 357-1564</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Kajla Elemér</td> -->
+									<!-- <td>kajlaelemer@gmail</td> -->
+									<!-- <td>1834. Baja, Teleki Út 76.</td> -->
+									<!-- <td class="noneRightBorder">+36/30 745-6431</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Sovány Gizella</td> -->
+									<!-- <td>sovanygizella@gmail</td> -->
+									<!-- <td>2356. Karcag, Deák Ferenc utca 113.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 357-1564</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Kajla Elemér</td> -->
+									<!-- <td>kajlaelemer@gmail</td> -->
+									<!-- <td>1834. Baja, Teleki Út 76.</td> -->
+									<!-- <td class="noneRightBorder">+36/30 745-6431</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Sovány Gizella</td> -->
+									<!-- <td>sovanygizella@gmail</td> -->
+									<!-- <td>2356. Karcag, Deák Ferenc utca 113.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 357-1564</td> -->
+								<!-- </tr> -->
+								<!-- <tr> -->
+									<!-- <td class="noneLeftBorder">Akárki Bárki</td> -->
+									<!-- <td>akarkibarki56@gmail</td> -->
+									<!-- <td>1132. Budapest, Váci Út 82.</td> -->
+									<!-- <td class="noneRightBorder">+36/20 524-8569</td> -->
+								<!-- </tr> -->
+								
+								
+							</tbody>
+						</table>
+					
+					</div>
+				
+				</div>
+			
+			</div>
+			
+		</div>
+		
+		<script src="scripts/script.js"></script>
+		
+		</div>
+		
+		
+	</body>
+</html>

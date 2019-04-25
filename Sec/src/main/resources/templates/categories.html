@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/main}">
+<head>
+	<title>Helpdesk kezdőlap</title>
+</head>
+<body onload="changeChecked()">
+		
+	<div layout:fragment="loginContent">
+		
+		<div class="container">
+			
+			<div class="pageContent550">
+
+					<div id="page-profile-userlist" class="border">
+						<p class="underLineP">Kategóriák</p>
+
+						<input type="text" id="search" class="lcPanel lcTextbox lcBordered" onkeyup="searchBar()" placeholder="Keresés..." autocomplete="off">
+
+						<div class="scroll page-left-list">
+							<ul id="userList">
+								<li>
+									<a class="lcLink" href="#">
+										Hálózat
+									</a>
+								</li>
+								
+								<li>
+									<a class="lcLink" href="###">
+										Program
+									</a>
+								</li>
+								
+								<li>
+									<a class="lcLink" href="###">
+										Tűzfal
+									</a>
+								</li>
+								
+								<li>
+									<a class="lcLink" href="#">
+										Nyomtató
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hardver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Support
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Telefon
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Szoftver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Weblap
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hardver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hálózat
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Nyomtató
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Tűzfal
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Program
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Support
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Telefon
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Szoftver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Weblap
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hardver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Nyomtató
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hálózat
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Nyomtató
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Tűzfal
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Program
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Support
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Telefon
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Szoftver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Weblap
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hardver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Telefon
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Szoftver
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Weblap
+									</a>
+								</li>
+								<li>
+									<a class="lcLink" href="#">
+										Hardver
+									</a>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="elementToBottom">
+							<button form="newCategoryForm" class="lcButton lcPanel" type="submit">Kategória hozzáadása</button>
+						</div>
+						
+					</div>
+				
+					<div id="page-profile-data" class="border">
+
+						<p class="underLineP">Kategória adatlapja</p>
+
+						<div id="editCategoryName">
+							<label>Megnevezés: </label>
+							<input class="lcPanel lcTextbox lcBordered" value="Nyomtató"/>
+							<button form="editUser" class="lcButton lcPanel inLineButton" type="submit">Átnevezés</button>
+						</div>
+						
+						<p class="underLineP">Tagságok: </p>
+						
+						<div>
+						
+							<div id="editRoles">
+								
+								<div id="editRoles-left">
+									
+									<label>Hozzáadható: </label>
+									
+									<div id="addRoles">
+										
+										<div class="height300 rolesList scroll">
+											
+											<!-- <ul> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Akárki Bárki (akarkibarki56@gmail.com)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Kozma Krisztián (kozmakrisztian89@gmail.com)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Nagy Elek (nagyelek@helpdesk.hu)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Admin (admin@helpdesk.hu)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Akárki Bárki (akarkibarki56@gmail.com)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Nagy Elek (nagyelek@helpdesk.hu)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Kozma Krisztián (kozmakrisztian89@gmail.com)"/>
+												<!-- </li> -->
+												<!-- <li onclick="markerEvent(this)">Admin</li> -->
+												<!-- <li onclick="markerEvent(this)">Bejelentő</li> -->
+												<!-- <li onclick="markerEvent(this)">Megoldó</li> -->
+												<!-- <li onclick="markerEvent(this)">Tűzfal</li> -->
+												<!-- <li onclick="markerEvent(this)">Telefon</li> -->
+												<!-- <li onclick="markerEvent(this)">Support</li> -->
+												<!-- <li onclick="markerEvent(this)">Hardver</li> -->
+											<!-- </ul> -->
+										</div>
+									</div>
+									
+								</div>
+								
+								
+								
+								<div id="editRoles-right">
+									
+									<label>Meglévő: </label>
+									
+									<div id="availableRoles">
+										
+										<div class="height300 rolesList scroll">
+											
+											<!-- <ul> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Iványi Magdolna (imagdi@helpdesk.hu)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Nagy Zakariás (nagyzakarias@helpdesk.hu)"/>
+												<!-- </li> -->
+												<!-- <li> -->
+													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Koza Kálmán (kozakalman@gmail.com)"/>
+												<!-- </li> -->
+												<!-- <li onclick="markerEvent(this)">Weblap</li> -->
+												<!-- <li onclick="markerEvent(this)">Hálózat</li> -->
+												<!-- <li onclick="markerEvent(this)">Program</li> -->
+											<!-- </ul> -->
+										</div>
+											
+									</div>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+
+						<p class="underLineP"></p>
+
+						<div>
+							<div>
+								<button class="lcButton lcPanel inLineButton" type="submit">Kategória mentése</button>
+								<button class="lcButton lcPanel inLineButton deleteButton" type="submit">Kategória törlése</button>
+							</div>
+						</div>
+
+					</div>
+
+				
+			
+			</div>
+			
+		</div>
+		
+		<script src="scripts/script.js"></script>
+		
+		</div>
+		
+		
+	</body>
+</html>

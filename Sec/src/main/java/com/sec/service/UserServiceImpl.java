@@ -3,6 +3,7 @@ package com.sec.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //	private EmailService emailService;
 	
 	private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	
 	private final String USER_ROLE = "USER";
+	
+	private final String SOLVER_ROLE = "SOLVER";
+	
+	private final String ADMIN_ROLE = "ADMIN";
 	
 	private final String TICKETSTATUS = "Megoldóra vár";
 	
@@ -43,7 +49,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public UserServiceImpl( UserRepository userRepository,
 							RoleRepository roleRepository,
 							CategoryRepository categoryRepository,
-							EmailService emailService ) {
+							EmailService emailService
+							) {
 		
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -52,8 +59,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public List<User> findAll() {
-		return userRepository.findAll();
+	public List<User> findAllByOrderByFullNameAsc() {
+		return userRepository.findAllByOrderByFullNameAsc();
+	}
+	
+	@Override
+	public Optional<User> findById(Long id) {
+		return userRepository.findById(id);
 	}
 
 	@Override
@@ -67,8 +79,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
+	public Set<Role> findUserPossibleRoles(Long loggedInUserId){
+		return userRepository.findUserPossibleRoles(loggedInUserId);
+	}
+	
+	@Override
 	public List<Category> findUserCategoriesInnerJoin(Long loggedInUserId) {
 		return userRepository.findUserCategoriesInnerJoin(loggedInUserId);
+	}
+	
+	@Override
+	public List<Category> findUserPossibleCategories(Long loggedInUserId) {
+		return userRepository.findUserPossibleCategories(loggedInUserId);
 	}
 	
 	@Override
@@ -155,8 +177,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public void switchSelectedStatus(User loggedInUser, String SelectedStatus) {
-		loggedInUser.setSelectedStatus(SelectedStatus);
+	public void switchSelectedStatus(User loggedInUser, String selectedStatus) {
+		loggedInUser.setSelectedStatus(selectedStatus);
 		userRepository.save(loggedInUser);
 	}
 	
@@ -186,9 +208,124 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		Collections.sort(rolesArray);
 		return rolesArray;
 	}
+	
+	@Override
+	public Long idToLong(String userId) {
+		Long toLong = 0L;
+		if ( userId != null && userId.trim() != "" ) {
+			try {
+				toLong = Long.parseLong(userId);
+			} catch (NumberFormatException e) {}
+		}
+		return toLong;
+	}
 
+	@Override
+	public String changePassword(User user, String oldPassword, String newPassword, String confirmPassword) {
+		
+		if (!encoder.matches(oldPassword, user.getPassword())) return "A régi jelszó nem megfelelő!";
+		
+		if (!confirmPassword.equals(newPassword)) return "A jelszavak nem egyeznek!";
+		
+//		if (newPassword.length() < 8) return "Az új jelszónak minimum 8 karakternek kell lennie, tartalmaznia kell legalább egy kisbetűt, nagybetűt és számot!";
+		
+		user.setPassword(encoder.encode(newPassword));
+		user.setConfirmPassword(encoder.encode(""));
+		userRepository.save(user);
+		
+		return "A jelszó megváltozott";
+	}
+
+	@Override
+	public String changePassword(User user, String newPassword, String confirmPassword) {
+		
+		if (!confirmPassword.equals(newPassword)) return "A jelszavak nem egyeznek!";
+		
+//		if (newPassword.length() < 8) return "Az új jelszónak minimum 8 karakternek kell lennie, tartalmaznia kell legalább egy kisbetűt, nagybetűt és számot!";
+		
+		user.setPassword(encoder.encode(newPassword));
+		user.setConfirmPassword(encoder.encode(""));
+		userRepository.save(user);
+		
+		return "A jelszó megváltozott";
+	}
+
+	@Override
+	public void addCategoryToUserCategories(User selectedUser, String categoryToAdd) {
+		
+		if (selectedUser.getCategories().size() == 1) {
+			selectedUser.getRoles().add(roleRepository.findByRole(SOLVER_ROLE));
+		}
+		
+		selectedUser.getCategories().add(categoryRepository.findByCategory(categoryToAdd));
+		userRepository.save(selectedUser);
+	}
+
+	@Override
+	public void removeCategoryFromUserCategories(User selectedUser, String categoryToRemove) {
+		
+		selectedUser.getCategories().remove(categoryRepository.findByCategory(categoryToRemove));
+		selectedUser.setSelectedCategory(TICKETCATEGORY);
+		
+		if (selectedUser.getCategories().size() == 1) {
+			selectedUser.getRoles().remove(roleRepository.findByRole(SOLVER_ROLE));
+		}
+		
+		userRepository.save(selectedUser);
+	}
+
+	@Override
+	public void addRoleToUserRoles(User selectedUser, String roleToAdd) {
+		selectedUser.getRoles().add(roleRepository.findByRole(roleToAdd));
+		userRepository.save(selectedUser);
+	}
+
+	@Override
+	public void removeRoleFromUserRoles(User selectedUser, String roleToRemove) {
+		selectedUser.getRoles().remove(roleRepository.findByRole(roleToRemove));
+		userRepository.save(selectedUser);
+	}
 	
+	@Override
+	public void disableUser(User selectedUser, String disableUser) {
+//		boolean b;
+//		if (disableUser.equals("true")) {
+//			b = true;
+//		} else if (disableUser.equals("false")) {
+//			b = false;
+//		} else return;
+//		selectedUser.setEnabled(b);
+		switch (disableUser) {
+			case "true" :
+				selectedUser.setEnabled(true);
+				break;
+			case "false" :
+				selectedUser.setEnabled(false);
+				break;
+			default : return;
+		}
+		
+		userRepository.save(selectedUser);
+	}
 	
+	@Override
+	public boolean userIsAdmin(User selectedUser) {
+		return selectedUser.getRoles().contains(roleRepository.findByRole(ADMIN_ROLE));
+	}
 	
+	@Override
+	public void changeAdminRole(User selectedUser, String adminRole) {
+		switch (adminRole) {
+			case "false" :
+				selectedUser.getRoles().addAll(roleRepository.findAll());
+				selectedUser.getCategories().addAll(categoryRepository.findAll());
+				break;
+			case "true" :
+				selectedUser.getRoles().remove(roleRepository.findByRole(ADMIN_ROLE));
+				break;
+			default : return;
+		}
+		userRepository.save(selectedUser);
+	}
 	
 }
