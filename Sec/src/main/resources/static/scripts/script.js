@@ -59,3 +59,16 @@ function changeAdminRole() {
 	document.getElementById("adminRoleForm").submit();
 	return;
 }
+
+function chooser(obj) {
+	document.getElementsByName("categoryName")[0].value = obj.innerHTML;
+	document.getElementsByClassName("selectorUl")[0].style.display = "none";
+}
+
+function selectorOver() {
+	document.getElementsByClassName("selectorUl")[0].style.display = "block";
+}
+
+function selectorOut() {
+	document.getElementsByClassName("selectorUl")[0].style.display = "none";
+}

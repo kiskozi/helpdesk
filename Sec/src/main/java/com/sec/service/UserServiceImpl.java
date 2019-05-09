@@ -93,6 +93,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userRepository.findUserPossibleCategories(loggedInUserId);
 	}
 	
+	//Ha megoldó vagy admin
+	@Override
+	public List<User> userSearch(String fullName, String email, String address, String phoneNumber) {
+		return userRepository.findByFullNameContainingAndEmailContainingAndAddressContainingAndPhoneNumberContainingAllIgnoreCase(fullName, email, address, phoneNumber);
+	
+//			return userRepository.findByFullNameLikeAndEmailLikeAndAddressLikeAndPhoneNumberLikeAllIgnoreCase(
+//					(fullName!=null && fullName!="") ? "%" + fullName + "%" : "%%"
+//					,(email!=null && email!="") ? "%" + email + "%" : "%%"
+//					,(address!=null && address!="") ? "%" + address + "%" : "%%"
+//					,(phoneNumber!=null && phoneNumber!="") ? "%" + phoneNumber + "%" : "%%"
+//					);
+	}
+	
+	@Override
+	public List<User> userSearch(String fullName, String email, String address, String phoneNumber, String categoryName) {
+		return userRepository.userSearch("%" + fullName + "%", "%" + email + "%", "%" + address + "%", "%" + phoneNumber + "%", categoryName);
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = findByEmail(username);

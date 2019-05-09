@@ -33,4 +33,19 @@ public interface UserRepository extends CrudRepository<User, Long> {
 //	@Query(value = "SELECT * FROM categories WHERE id NOT IN ( SELECT category_id FROM user_categories WHERE user_id = ?1) ORDER BY category ASC", nativeQuery = true)
 	@Query(value = "SELECT c FROM Category c WHERE c.id NOT IN ( SELECT cid.id FROM User u INNER JOIN u.categories cid WHERE u.id = ?1 ) ORDER BY category ASC")
 	List<Category> findUserPossibleCategories(Long loggedInUserId);
+	
+	List<User> findByFullNameContainingAndEmailContainingAndAddressContainingAndPhoneNumberContainingAllIgnoreCase(String fullName, String email, String address, String phoneNumber);
+	
+//	@Query(value = "SELECT u FROM User u "
+//			+ "WHERE UPPER(u.fullName) LIKE UPPER(?1) "
+//			+ "AND UPPER(u.fullName) LIKE UPPER(?2) "
+//			+ "AND UPPER(u.fullName) LIKE UPPER(?3) "
+//			+ "AND UPPER(u.fullName) LIKE UPPER(?4) "
+//			+ "AND u.id IN (SELECT uid.id FROM Category c INNER JOIN c.users uid "
+//			+ "WHERE c.id = (SELECT cid.id FROM Category cid "
+//			+ "WHERE cid.category = ?5)) "
+//			+ "ORDER BY fullName ASC")
+	@Query(value = "SELECT * FROM users WHERE UPPER(full_name) LIKE UPPER(?1) AND UPPER(email) LIKE UPPER(?2) AND UPPER(address) LIKE UPPER(?3) AND UPPER(phone_number) LIKE UPPER(?4) AND id IN (SELECT user_id FROM user_categories WHERE category_id = (SELECT id FROM categories WHERE category = ?5)) ORDER BY full_name ASC;", nativeQuery = true)
+	List<User> userSearch(String fullName, String email, String address, String phoneNumber, String categoryName);
+	
 }

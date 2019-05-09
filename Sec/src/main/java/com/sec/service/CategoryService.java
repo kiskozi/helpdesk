@@ -11,6 +11,8 @@ public interface CategoryService {
 	
 	List<Category> findAllByOrderByCategoryAsc();
 	
+	List<Category> findAllByOrderByCategoryAscRemoveOne(String toRemove);
+	
 	Category findByCategory(String category);
 	
 }

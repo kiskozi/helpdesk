@@ -24,6 +24,17 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	public List<Category> findAllByOrderByCategoryAscRemoveOne(String toRemove) {
+		List<Category> categories = categoryRepository.findAllByOrderByCategoryAsc();
+		for (Category c : categories) {
+			if (c.getCategory().equals(toRemove)) {
+				categories.remove(c);
+			}
+		}
+		return categories;
+	}
+
+	@Override
 	public Category findByCategory(String category) {
 		return categoryRepository.findByCategory(category);
 	}

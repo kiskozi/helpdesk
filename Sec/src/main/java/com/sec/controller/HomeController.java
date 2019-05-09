@@ -261,14 +261,15 @@ public class HomeController {
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 		model.addAttribute("ticketRequestor", loggedInUser.getFullName());
 		
-		List<Category> categories = categoryService.findAllByOrderByCategoryAsc();
-		for (Category c : categories) {
-			if (c.getCategory().equals("Saját")) {
-				categories.remove(c);
-			}
-		}
+		model.addAttribute("categories", categoryService.findAllByOrderByCategoryAscRemoveOne("Saját"));
 		
-		model.addAttribute("categories", categories);
+//		List<Category> categories = categoryService.findAllByOrderByCategoryAsc();
+//		for (Category c : categories) {
+//			if (c.getCategory().equals("Saját")) {
+//				categories.remove(c);
+//			}
+//		}
+//		model.addAttribute("categories", categories);
 		
 		
 		
@@ -508,7 +509,26 @@ public class HomeController {
 //	}
 	
 	@RequestMapping("/users")
-	public String users(Model model) {
+	public String users(
+			Model model,
+			boolean searchIsPressed,
+			@RequestParam(value="fullName", required=false) String fullName,
+			@RequestParam(value="email", required=false) String email,
+			@RequestParam(value="address", required=false) String address,
+			@RequestParam(value="phoneNumber", required=false) String phoneNumber,
+			@RequestParam(value="searchButton", required=false) String searchButton,
+			@RequestParam(value="categoryName", required=false) String categoryName
+			) {
+		
+		model.addAttribute("categories", categoryService.findAllByOrderByCategoryAscRemoveOne("Saját"));
+		
+		if (searchButton!=null && !(fullName.isEmpty() && email.isEmpty() && address.isEmpty() && phoneNumber.isEmpty() && categoryName.isEmpty())) {
+			model.addAttribute("users", userService.userSearch(fullName, email, address, phoneNumber, categoryName));
+			searchIsPressed = true;
+		} else {
+			searchIsPressed = false;
+		}
+		model.addAttribute("searchIsPressed", searchIsPressed);
 		return "users";
 	}
 	

@@ -37,6 +37,11 @@ public interface UserService {
 	List<Category> findUserCategoriesInnerJoin(Long loggedInUserId);
 	
 	List<Category> findUserPossibleCategories(Long loggedInUserId);
+	
+	//Ha megoldó vagy admin
+	List<User> userSearch(String fullName, String email, String address, String phoneNumber);
+	
+	List<User> userSearch(String fullName, String email, String address, String phoneNumber, String categoryName);
 
 	String editUser(User loggedInUser,String newName,String newEmail,String newAddress,String newPhoneNumber);
 
