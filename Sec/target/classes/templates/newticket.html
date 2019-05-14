@@ -10,55 +10,94 @@
 	
 		<form name="newticket" th:action="@{/newtick}" th:object="${ticket}" enctype="multipart/form-data" method="post">
 		
-			<div id="ticket-div" class="border">
-				<div id="ticket-content">
-					<label class="prLabel">Bejelentő: <span class="prLabel-span" th:text="${ticketRequestor}">Admin</span></label>
-<!-- 					<input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" th:text="|Bejelentő: ${ticketRequestor}|"></input> -->
-					
-					<div>
-						
-						Kategória: 
-						<select name="selectedCategory" >
-			 				<option th:each="category : ${categories}" th:value="${category.category}" th:text="${category.category}" ></option>
-						</select>
-						
-					</div>
-					
-					<label class="prLabel tcLabel">Bejelentés megnevezése: </label>
-					<input class="lcPanel lcTextbox lcBordered prPanel prTextbox" type="text" th:field="*{subject}" placeholder="A hiba rövid leírása" required="true"></input>
-					
-					<div class="container">
+			<div class="container">
 				
-						<div id="pr-tc-left">
+				<div class="pageContent550 width50percent">
+	
+					<div class="border">
 					
-							<label class="prLabel tcLabel">A hiba részletes leírása: </label>
-							<textarea id="incident-desc" class="prTextarea scroll" th:field="*{description}"></textarea>
-					
-							<button class="lcButton lcPanel prButton prPanel" type="submit">Hiba mentése</button>
-							<a class="lcButton lcPanel prButton prPanel" href="/incidents">Mégse</a>
-							
+						<div>
+							<p class="underLineP">Új hiba bejelentése</p>
 						</div>
-
-						<div id="pr-tc-right">
-					
-							<label class="prLabel tcLabel">Csatolmányok:</label>
-							<div id="attach" class="border scroll">
+						
+						<div class="flexRowWrap">
+						
+							<div class="width100percent flexContainer">
+						
+								<div class="LabelAndInput width235px">
+									<label class="noWrap">Bejelentő: </label>
+									<span class="prLabel-span width164px" th:text="${ticketRequestor}">Admin</span>
+								</div>
+								
 							</div>
 							
-							<label id="attach-label" class="lcButton lcPanel prButton prPanel">Fájlok csatolása
-								<input type="file" name="uploadingFiles" id="uploadingFiles" multiple onchange="showname()" />
-							</label>
+							<div class="width100percent flexContainer">
 							
-					
+								<div class="LabelAndInput width235px">
+								
+									<label class="noWrap">Kategória: </label>
+									<div onmouseover="selectorOver()" onmouseout="selectorOut()" class="selector">
+										<input title="value" class="selectorInput" name="selectedCategory" value="Válasszon" readonly />
+										<ul class="selectorUl">
+											<li onclick="chooser(this)" class="selectorLi" th:each="category : ${categories}" th:value="${category.category}" th:text="${category.category}">Mindenki</li>
+										</ul>
+									</div>
+									
+								</div>
+							
+							</div>
+							
+							<div class="width100percent flexContainer">
+	
+								<div class="LabelAndInput">
+									<label class="noWrap">Bejelentés megnevezése: </label>
+								</div>
+							
+							</div>
+							
+							<div class="width100percent flexContainer">
+	
+								<div class="LabelAndInput width235px">
+									<input class="lcPanel lcTextbox lcBordered width100percent" type="text" th:field="*{subject}" placeholder="A hiba rövid leírása" required="true"></input>
+								</div>
+							
+							</div>
+						
 						</div>
-					</div>
+						
+						<div class="container">
 					
+							<div id="pr-tc-left">
+						
+								<label class="prLabel tcLabel">A hiba részletes leírása: </label>
+								<textarea id="incident-desc" class="prTextarea scroll" th:field="*{description}"></textarea>
+						
+								<button class="lcButton lcPanel prButton prPanel" type="submit">Hiba mentése</button>
+								<a class="lcButton lcPanel prButton prPanel" href="/incidents">Mégse</a>
+								
+							</div>
+	
+							<div id="pr-tc-right">
+						
+								<label class="prLabel tcLabel">Csatolmányok:</label>
+								<div id="attach" class="border scroll noWrap">
+								</div>
+								
+								<div class="padding5px0px">
+									<label class="lcButton lcPanel prButton prPanel">Fájlok csatolása
+										<input type="file" name="uploadingFiles" id="uploadingFiles" multiple onchange="showname()" />
+									</label>
+								</div>
+						
+							</div>
+						</div>
+						
+					</div>
 				</div>
 			</div>
 		</form>
 		
-		
-<script type="text/javascript">
+		<script type="text/javascript">
 			function showname() {
 				var del = document.getElementById('attach');
 				while (del.hasChildNodes()) {   
@@ -76,7 +115,7 @@
 				    document.getElementById('attach').appendChild(newdiv);
 			    }
 			};
-</script>
+		</script>
 		
 	</div>
 </body>

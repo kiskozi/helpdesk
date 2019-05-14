@@ -41,11 +41,13 @@ public interface UserService {
 	//Ha megoldó vagy admin
 	List<User> userSearch(String fullName, String email, String address, String phoneNumber);
 	
-	List<User> userSearch(String fullName, String email, String address, String phoneNumber, String categoryName);
+	List<User> userSearch(String fullName, String email, String address, String phoneNumber, String selectedCategory);
+	
+	List<User> findByCategoryId(Long selectedCategoryId);
+	
+	List<User> findCategoryPossibleUsers(Long selectedCategoryId);
 
 	String editUser(User loggedInUser,String newName,String newEmail,String newAddress,String newPhoneNumber);
-
-	Long idToLong(String userId);
 
 	String changePassword(User user, String oldPassword, String newPassword, String confirmPassword);
 

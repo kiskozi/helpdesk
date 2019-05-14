@@ -19,172 +19,9 @@
 
 						<div class="scroll page-left-list">
 							<ul id="userList">
-								<li>
-									<a class="lcLink" href="#">
+								<li th:each="category : ${categories}">
+									<a class="lcLink"  th:href="@{/categories(id=${category.id})}" th:text="${category.category}">
 										Hálózat
-									</a>
-								</li>
-								
-								<li>
-									<a class="lcLink" href="###">
-										Program
-									</a>
-								</li>
-								
-								<li>
-									<a class="lcLink" href="###">
-										Tűzfal
-									</a>
-								</li>
-								
-								<li>
-									<a class="lcLink" href="#">
-										Nyomtató
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hardver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Support
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Telefon
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Szoftver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Weblap
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hardver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hálózat
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Nyomtató
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Tűzfal
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Program
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Support
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Telefon
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Szoftver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Weblap
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hardver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Nyomtató
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hálózat
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Nyomtató
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Tűzfal
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Program
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Support
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Telefon
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Szoftver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Weblap
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hardver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Telefon
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Szoftver
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Weblap
-									</a>
-								</li>
-								<li>
-									<a class="lcLink" href="#">
-										Hardver
 									</a>
 								</li>
 							</ul>
@@ -195,14 +32,18 @@
 						</div>
 						
 					</div>
+					
+					<div th:if="${categoryIsSelected == false}" id="page-profile-data" class="border">
+						<h1 id="noselected-div">Válasszon ki egy kategóriát a megtekintéshez.</h1>
+					</div>
 				
-					<div id="page-profile-data" class="border">
+					<div th:if="${categoryIsSelected}" id="page-profile-data" class="border">
 
 						<p class="underLineP">Kategória adatlapja</p>
 
 						<div id="editCategoryName">
 							<label>Megnevezés: </label>
-							<input class="lcPanel lcTextbox lcBordered" value="Nyomtató"/>
+							<input class="lcPanel lcTextbox lcBordered" th:value="${selectedCategory.category}"/>
 							<button form="editUser" class="lcButton lcPanel inLineButton" type="submit">Átnevezés</button>
 						</div>
 						
@@ -211,6 +52,8 @@
 						<div>
 						
 							<div id="editRoles">
+							
+								<form id="editcategories" name="editcategories" th:action="@{/categories} + '?id=' + ${selectedCategory?.id}" method="post"></form>
 								
 								<div id="editRoles-left">
 									
@@ -220,36 +63,12 @@
 										
 										<div class="height300 rolesList scroll">
 											
-											<!-- <ul> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Akárki Bárki (akarkibarki56@gmail.com)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Kozma Krisztián (kozmakrisztian89@gmail.com)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Nagy Elek (nagyelek@helpdesk.hu)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Admin (admin@helpdesk.hu)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Akárki Bárki (akarkibarki56@gmail.com)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Nagy Elek (nagyelek@helpdesk.hu)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Kozma Krisztián (kozmakrisztian89@gmail.com)"/>
-												<!-- </li> -->
-												<!-- <li onclick="markerEvent(this)">Admin</li> -->
-												<!-- <li onclick="markerEvent(this)">Bejelentő</li> -->
-												<!-- <li onclick="markerEvent(this)">Megoldó</li> -->
-												<!-- <li onclick="markerEvent(this)">Tűzfal</li> -->
-												<!-- <li onclick="markerEvent(this)">Telefon</li> -->
-												<!-- <li onclick="markerEvent(this)">Support</li> -->
-												<!-- <li onclick="markerEvent(this)">Hardver</li> -->
-											<!-- </ul> -->
+											<button th:each="user : ${usersToAdd}" form="editcategories" class="editRoleItems" type="submit" name="userToAdd" th:value="${user.email}" th:text="${user.fullName} + ' (' + ${user.email} + ')'"></button>
+											
+<!-- 											<label th:each="user : ${usersToAdd}" class="editRoleItems" onclick="editcategoriesSubmit()" th:text="${user.fullName} + ' (' + ${user.email} + ')'"> -->
+<!-- 												<input form="editcategories" type="" name="userToAdd"/> -->
+<!-- 											</label> -->
+											
 										</div>
 									</div>
 									
@@ -264,21 +83,9 @@
 									<div id="availableRoles">
 										
 										<div class="height300 rolesList scroll">
-											
-											<!-- <ul> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Iványi Magdolna (imagdi@helpdesk.hu)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Nagy Zakariás (nagyzakarias@helpdesk.hu)"/>
-												<!-- </li> -->
-												<!-- <li> -->
-													<input form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" value="Koza Kálmán (kozakalman@gmail.com)"/>
-												<!-- </li> -->
-												<!-- <li onclick="markerEvent(this)">Weblap</li> -->
-												<!-- <li onclick="markerEvent(this)">Hálózat</li> -->
-												<!-- <li onclick="markerEvent(this)">Program</li> -->
-											<!-- </ul> -->
+
+											<button th:each="user : ${addedUsers}" form="editcategories" class="editRoleItems" type="submit" name="userToRemove" th:value="${user.email}" th:text="${user.fullName} + ' (' + ${user.email} + ')'"></button>
+
 										</div>
 											
 									</div>
@@ -306,9 +113,7 @@
 			
 		</div>
 		
-		<script src="scripts/script.js"></script>
-		
-		</div>
+	</div>
 		
 		
 	</body>

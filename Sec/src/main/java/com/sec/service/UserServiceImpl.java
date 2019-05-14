@@ -107,8 +107,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
-	public List<User> userSearch(String fullName, String email, String address, String phoneNumber, String categoryName) {
-		return userRepository.userSearch("%" + fullName + "%", "%" + email + "%", "%" + address + "%", "%" + phoneNumber + "%", categoryName);
+	public List<User> userSearch(String fullName, String email, String address, String phoneNumber, String selectedCategory) {
+		return userRepository.userSearch("%" + fullName + "%", "%" + email + "%", "%" + address + "%", "%" + phoneNumber + "%", selectedCategory);
+	}
+	
+	@Override
+	public List<User> findByCategoryId(Long selectedCategoryId) {
+		return userRepository.findByCategoryId(selectedCategoryId);
+	}
+	
+	@Override
+	public List<User> findCategoryPossibleUsers(Long selectedCategoryId) {
+		return userRepository.findCategoryPossibleUsers(selectedCategoryId);
 	}
 	
 	@Override
@@ -225,17 +235,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			}
 		Collections.sort(rolesArray);
 		return rolesArray;
-	}
-	
-	@Override
-	public Long idToLong(String userId) {
-		Long toLong = 0L;
-		if ( userId != null && userId.trim() != "" ) {
-			try {
-				toLong = Long.parseLong(userId);
-			} catch (NumberFormatException e) {}
-		}
-		return toLong;
 	}
 
 	@Override

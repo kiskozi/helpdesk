@@ -41,8 +41,6 @@ public interface TicketService {
 
 	String addNewTicket(Ticket ticket, User user, Category category);
 
-	Long idToLong(String ticketId);
-
 	void closeTicket(Ticket selectedTicket);
 
 	void enrollTicket(Ticket selectedTicket, String fullName);

@@ -46,6 +46,11 @@ public interface UserRepository extends CrudRepository<User, Long> {
 //			+ "WHERE cid.category = ?5)) "
 //			+ "ORDER BY fullName ASC")
 	@Query(value = "SELECT * FROM users WHERE UPPER(full_name) LIKE UPPER(?1) AND UPPER(email) LIKE UPPER(?2) AND UPPER(address) LIKE UPPER(?3) AND UPPER(phone_number) LIKE UPPER(?4) AND id IN (SELECT user_id FROM user_categories WHERE category_id = (SELECT id FROM categories WHERE category = ?5)) ORDER BY full_name ASC;", nativeQuery = true)
-	List<User> userSearch(String fullName, String email, String address, String phoneNumber, String categoryName);
+	List<User> userSearch(String fullName, String email, String address, String phoneNumber, String selectedCategory);
 	
+	@Query(value = "SELECT u FROM Category c INNER JOIN c.users u WHERE c.id = ?1 order by u.fullName asc")
+	List<User> findByCategoryId(Long selectedCategoryId);
+	
+	@Query(value = "SELECT u FROM User u WHERE u.id NOT IN ( SELECT uid.id FROM Category c INNER JOIN c.users uid WHERE c.id = ?1 ) ORDER BY fullName ASC")
+	List<User> findCategoryPossibleUsers(Long selectedCategoryId);
 }

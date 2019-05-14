@@ -156,17 +156,6 @@ public class TicketServiceImpl implements TicketService {
 	public Optional<Ticket> findById(Long id) {
 		return ticketRepository.findById(id);
 	}
-
-	@Override
-	public Long idToLong(String ticketId) {
-		Long toLong = 0L;
-		if ( ticketId != null && ticketId.trim() != "" ) {
-			try {
-				toLong = Long.parseLong(ticketId);
-			} catch (NumberFormatException e) {}
-		}
-		return toLong;
-	}
 	
 	@Override
 	public String addNewTicket(Ticket ticket, User user, Category category) {
@@ -200,9 +189,5 @@ public class TicketServiceImpl implements TicketService {
 		selectedTicket.setStatus(TICKET_STATUS_WAITING);
 		ticketRepository.save(selectedTicket);
 	}
-
-	
-	
-
 
 }

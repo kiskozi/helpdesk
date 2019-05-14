@@ -3,6 +3,7 @@ package com.sec.controller;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ import com.sec.repo.CategoryRepository;
 import com.sec.repo.RoleRepository;
 import com.sec.service.AttachmentService;
 import com.sec.service.CategoryService;
+import com.sec.service.CommonService;
 import com.sec.service.MessageService;
 import com.sec.service.TicketService;
 import com.sec.service.UserDetailsImpl;
@@ -57,6 +59,7 @@ public class HomeController {
 	private AttachmentService attachmentService;
 	private MessageService messageService;
 	private CategoryService categoryService;
+	private CommonService commonService;
 	
 //	@Autowired
 //	public void setJavaMailSender(EmailService emailService) {
@@ -69,7 +72,8 @@ public class HomeController {
 								TicketService ticketService,
 								AttachmentService attachmentService,
 								MessageService messageService,
-								CategoryService categoryService
+								CategoryService categoryService,
+								CommonService commonService
 								) {
 		
 		this.userService = userService;
@@ -77,6 +81,7 @@ public class HomeController {
 		this.attachmentService = attachmentService;
 		this.messageService = messageService;
 		this.categoryService = categoryService;
+		this.commonService = commonService;
 	}
 	
 	private UserValidator userValidator;
@@ -151,7 +156,7 @@ public class HomeController {
 		model.addAttribute("categories", userService.findUserCategoriesInnerJoin(loggedInUser.getId()));
 //		model.addAttribute("roles", userService.rolesToList(loggedInUser.getRoles()));
 		
-		Ticket selectedTicket = ticketService.findInAllowedTickets(loggedInUser, ticketService.idToLong(ticketId));
+		Ticket selectedTicket = ticketService.findInAllowedTickets(loggedInUser, commonService.idToLong(ticketId));
 		if (selectedTicket == null) {
 			model.addAttribute("ticketIsSelected", false);
 		} else {
@@ -159,7 +164,7 @@ public class HomeController {
 			model.addAttribute("selectedTicket", selectedTicket);
 			
 		
-//			Ticket ticket = ticketService.findInAllowedTickets(loggedInUser, ticketService.idToLong(ticketId));
+//			Ticket ticket = ticketService.findInAllowedTickets(loggedInUser, commonService.idToLong(ticketId));
 //			if (ticket == null) {
 //				model.addAttribute("ticketIsSelected", false);
 //				return "incidents";
@@ -336,7 +341,7 @@ public class HomeController {
 								) {
 		model.addAttribute("users", userService.findAllByOrderByFullNameAsc());
 		
-		Optional<User> findUser = userService.findById(userService.idToLong(userId));
+		Optional<User> findUser = userService.findById(commonService.idToLong(userId));
 		
 		User selectedUser = findUser.isPresent() ? findUser.get() : userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
 		
@@ -381,7 +386,7 @@ public class HomeController {
 			@RequestParam(value="id", required=false) String userId
 			) {
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
-		Optional<User> findUser = userService.findById(userService.idToLong(userId));
+		Optional<User> findUser = userService.findById(commonService.idToLong(userId));
 		if (findUser.isPresent()) {
 			selectedUser = findUser.get();
 		} else {
@@ -433,7 +438,7 @@ public class HomeController {
 			@RequestParam(value="id", required=false) String userId
 			) {
 		User loggedInUser = userService.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getUsername());
-		Optional<User> findUser = userService.findById(userService.idToLong(userId));
+		Optional<User> findUser = userService.findById(commonService.idToLong(userId));
 		if (findUser.isPresent()) {
 			selectedUser = findUser.get();
 		} else {
@@ -517,13 +522,13 @@ public class HomeController {
 			@RequestParam(value="address", required=false) String address,
 			@RequestParam(value="phoneNumber", required=false) String phoneNumber,
 			@RequestParam(value="searchButton", required=false) String searchButton,
-			@RequestParam(value="categoryName", required=false) String categoryName
+			@RequestParam(value="selectedCategory", required=false) String selectedCategory
 			) {
 		
 		model.addAttribute("categories", categoryService.findAllByOrderByCategoryAscRemoveOne("Saját"));
 		
-		if (searchButton!=null && !(fullName.isEmpty() && email.isEmpty() && address.isEmpty() && phoneNumber.isEmpty() && categoryName.isEmpty())) {
-			model.addAttribute("users", userService.userSearch(fullName, email, address, phoneNumber, categoryName));
+		if (searchButton!=null && !(fullName.isEmpty() && email.isEmpty() && address.isEmpty() && phoneNumber.isEmpty() && selectedCategory.isEmpty())) {
+			model.addAttribute("users", userService.userSearch(fullName, email, address, phoneNumber, selectedCategory));
 			searchIsPressed = true;
 		} else {
 			searchIsPressed = false;
@@ -533,7 +538,32 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/categories")
-	public String categories(Model model) {
+	public String categories(
+			Model model,
+//			Category selectedCategory,
+			@RequestParam(value="id", required=false) String categoryId,
+			@RequestParam(value="userToAdd", required=false) String userToAdd,
+			@RequestParam(value="userToRemove", required=false) String userToRemove
+			) {
+		
+		model.addAttribute("categories", categoryService.findAllByOrderByCategoryAscRemoveOne("Saját"));
+		
+		//Másik mód kiterjesztéssel
+//		selectedCategory = categoryService.findById(categoryId);
+		
+		Optional <Category> findCategory = categoryService.findById(commonService.idToLong(categoryId));
+//		if (findCategory.isPresent()) selectedCategory = findCategory.get();
+		Category selectedCategory = findCategory.isPresent() ? findCategory.get() : null;
+		if (selectedCategory == null) {
+			model.addAttribute("categoryIsSelected", false);
+		} else {
+			if (userToAdd != null) userService.addCategoryToUserCategories(userService.findByEmail(userToAdd), selectedCategory.getCategory());
+			if (userToRemove != null) userService.removeCategoryFromUserCategories(userService.findByEmail(userToRemove), selectedCategory.getCategory());
+			model.addAttribute("categoryIsSelected", true);
+			model.addAttribute("selectedCategory", selectedCategory);
+			model.addAttribute("usersToAdd", userService.findCategoryPossibleUsers(selectedCategory.getId()));
+			model.addAttribute("addedUsers", userService.findByCategoryId(selectedCategory.getId()));
+		}
 		return "categories";
 	}
 	

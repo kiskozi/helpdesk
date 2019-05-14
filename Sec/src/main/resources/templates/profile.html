@@ -9,10 +9,8 @@
 	<div layout:fragment="loginContent">
 		
 		<div class="container">
-			
-<!-- 			<div id="page-profile"> -->
 
-			<div class="pageContent650">
+			<div class="width70percent pageContent550">
 
 					<div sec:authorize="hasRole('ROLE_ADMIN')" th:if="${not #lists.isEmpty(users)}" id="page-profile-userlist" class="border">
 						<p class="underLineP">Felhasználók</p>
@@ -37,35 +35,55 @@
 					<form sec:authorize="!hasRole('ROLE_ADMIN')" id="changePass" name="changePass" th:action="@{/changepass}" method="post"></form>
 					<form sec:authorize="hasRole('ROLE_ADMIN')" id="changePass" name="changePass" th:action="@{/changeuserpass} + '?id=' + ${selectedUser?.id}" method="post"></form>
 					
-					<div id="page-profile-data" class="border">
-
-						<p class="underLineP">Adatok szerkesztése</p>
+					<div class="border">
 
 						<div>
-							<label>Teljes név: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newName" th:value="${selectedUser.fullName}"/>
+							<p class="underLineP">Adatok szerkesztése</p>
 						</div>
+						
+						
+						<div class="flexRowWrap">
+						
+							<div class="width100percent flexContainer">
+						
+								<div class="LabelAndInput">
+									<label class="noWrap">Teljes név: </label>
+									<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newName" th:value="${selectedUser.fullName}"/>
+								</div>
 
-						<div>
-							<label>E-mail cím: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newEmail" th:value="${selectedUser.email}"/>
-						</div>
+								<div class="width50px"></div>
+								
+								<div class="LabelAndInput">
+									<label class="noWrap">E-mail cím: </label>
+									<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newEmail" th:value="${selectedUser.email}"/>
+								</div>
+								
+							</div>
+							<div class="width100percent flexContainer">
 
-						<div>
-							<label>Cím: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newAddress" th:value="${selectedUser.address}"/>
-						</div>
+								<div class="LabelAndInput">
+									<label class="noWrap">Cím: </label>
+									<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newAddress" th:value="${selectedUser.address}"/>
+								</div>
 
-						<div>
-							<label>Telefonszám: </label>
-							<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newPhoneNumber" th:value="${selectedUser.phoneNumber}"/>
+								<div class="width50px"></div>
+
+								<div class="LabelAndInput">
+									<label class="noWrap">Telefonszám: </label>
+									<input form="editUser" class="lcPanel lcTextbox lcBordered" type="text" name="newPhoneNumber" th:value="${selectedUser.phoneNumber}"/>
+								</div>
+							
+							</div>
+						
 						</div>
 
 						<div>
 							<button form="editUser" class="lcButton lcPanel" type="submit">Változtatások mentése</button>
 						</div>
 						
-						<p sec:authorize="hasRole('ROLE_ADMIN')" class="underLineP">Jogosultságok szerkesztése</p>
+						<div>
+							<p sec:authorize="hasRole('ROLE_ADMIN')" class="underLineP">Jogosultságok szerkesztése</p>
+						</div>
 						
 						<div sec:authorize="hasRole('ROLE_ADMIN')">
 							<div id="editRoles">
@@ -78,7 +96,7 @@
 									
 									<div id="addRoles">
 										
-										<div class="height90 rolesList scroll">
+										<div class="height100 rolesList scroll">
 
 											<input th:each="category : ${categoriesToAdd}" form="editcategories" class="editRoleItems" type="submit" name="categoryToAdd" th:value="${category.category}"/>
 												
@@ -93,7 +111,7 @@
 									
 									<div id="availableRoles">
 										
-										<div class="height90 rolesList scroll">
+										<div class="height100 rolesList scroll">
 
 											<input th:each="category : ${addedCategories}" form="editcategories" class="editRoleItems" type="submit" name="categoryToRemove" th:value="${category.category}"/>
 											
@@ -113,13 +131,13 @@
 							
 							<div id="editOthers">
 										
-								<div class="lcCheckbox lcPanel">
+								<div class="lcCheckbox">
 									<label>Admin jog: </label>
 									<input form="adminRoleForm" type='hidden' id="adminRoleHidden" name="adminRole" th:value="${userIsAdmin}">
 									<input form="adminRoleForm" onclick="changeAdminRole()" type="checkbox" id="adminRole" name="adminRole" th:value="${userIsAdmin}">
 								</div>
 								
-								<div class="lcCheckbox lcPanel">
+								<div class="lcCheckbox">
 									<label>Felhasználó tiltása: </label>
 <!-- 									<input form="disableUserForm" onclick="enableDisable()" checked type="checkbox" id="disableUser" name="disableUser" th:value="${b}"/> -->
 									<input form="disableUserForm" type='hidden' id="disableUserHidden" name="disableUser" th:value="${!selectedUser.enabled}">
@@ -130,24 +148,44 @@
 							
 						</div>
 						
-						<p class="underLineP">Jelszó módosítása</p>
-
-						<div sec:authorize="!hasRole('ROLE_ADMIN')">
-							<label>Régi jelszó: </label>
-							<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="oldPassword"/>
-						</div>
-
 						<div>
-							<label>Új jelszó: </label>
-							<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="newPassword"/>
-						</div>
-
-						<div>
-							<label>Jelszó megerősítése: </label>
-							<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="confirmPassword"/>
+							<p class="underLineP">Jelszó módosítása</p>
 						</div>
 						
-						<span th:text="${passwordChanged}"></span>
+						<div class="flexRowWrap">
+						
+							<div class="width100percent flexContainer">
+								
+								<div sec:authorize="!hasRole('ROLE_ADMIN')" class="LabelAndInput">
+									<label class="noWrap">Régi jelszó: </label>
+									<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="oldPassword"/>
+								</div>
+								
+							</div>
+							<div class="width100percent flexContainer">
+
+								<div class="LabelAndInput">
+									<label class="noWrap">Új jelszó: </label>
+									<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="newPassword"/>
+								</div>
+
+								<div class="width50px"></div>
+
+								<div class="LabelAndInput">
+									<span th:text="${passwordChanged}"></span>
+								</div>
+								
+							</div>
+							<div class="width100percent flexContainer">
+
+								<div class="LabelAndInput">
+									<label class="noWrap">Jelszó megerősítése: </label>
+									<input form="changePass" class="lcPanel lcTextbox lcBordered" type="password" name="confirmPassword"/>
+								</div>
+								
+							</div>
+						
+						</div>
 
 						<div>
 							<button form="changePass" class="lcButton lcPanel" type="submit">Új jelszó mentése</button>
@@ -160,10 +198,8 @@
 			</div>
 			
 		</div>
-		
-		<script src="/scripts/script.js"></script>			
+				
 	</div>
-		
 		
 	</body>
 </html>

@@ -1,6 +1,7 @@
 package com.sec.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,23 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		return categories;
 	}
+
+	@Override
+	public Optional <Category> findById(Long categoryId) {
+		return categoryRepository.findById(categoryId);
+	}
+
+//	Kiterjesztéses megoldás ( extends CommonService)
+//	@Override
+//	public Category findById(String categoryId) {
+//		Long categoryIdToLong = this.idToLong(categoryId);
+//		if (categoryIdToLong == 0L)
+//			return null;
+//		
+//		Optional<Category> findCategory = categoryRepository.findById(categoryIdToLong);
+//		
+//		return findCategory.isPresent() ? findCategory.get() : null;
+//	}
 
 	@Override
 	public Category findByCategory(String category) {

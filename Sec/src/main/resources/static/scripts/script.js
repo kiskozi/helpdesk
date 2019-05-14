@@ -61,7 +61,7 @@ function changeAdminRole() {
 }
 
 function chooser(obj) {
-	document.getElementsByName("categoryName")[0].value = obj.innerHTML;
+	document.getElementsByName("selectedCategory")[0].value = obj.innerHTML;
 	document.getElementsByClassName("selectorUl")[0].style.display = "none";
 }
 
@@ -71,4 +71,13 @@ function selectorOver() {
 
 function selectorOut() {
 	document.getElementsByClassName("selectorUl")[0].style.display = "none";
+}
+
+function choosAndSubmit(obj) {
+	document.getElementsByName("selectedCategory")[0].value = obj.innerHTML;
+	document.getElementById("categoryselect").submit();
+}
+
+function editcategoriesSubmit() {
+	document.getElementById("editcategories").submit();
 }
